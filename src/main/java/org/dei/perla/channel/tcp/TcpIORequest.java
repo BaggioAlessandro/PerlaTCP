@@ -17,10 +17,48 @@ public class TcpIORequest implements IORequest {
 	public String getId() {
 		return id;
 	}
+	
+	public int getType(){
+		return type;
+	}
+	
+	public void setType(int type){
+		this.type = type;
+	}
 
 	@Override
 	public void setParameter(String name, Payload payload) {
 		//TODO controllare		
 	}
 	
+	public class TypeParameter{
+
+		public static final int NORMAL = 0;
+		public static final int CHANGE_IP = 1;
+		public static final int SHUTDOWN = 2;
+		public static final int DESC = 3;
+		
+		public static final int TYPE_LENGHT = 4;
+	}
+	
+	/*
+	public enum TypeParameter{
+		NORMAL(0),
+		CHANGE_IP(1),
+		SHUTDOWN(2),
+		DESC(3);
+		
+		private final int type;
+		public static final int TYPE_LENGHT = 4;
+		
+		private TypeParameter(int type) {	
+			this.type = type;
+		}
+
+		public int getType(){
+			return type;
+		}
+
+	}
+	*/
 }
