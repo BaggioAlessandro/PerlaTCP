@@ -6,10 +6,14 @@ import org.dei.perla.core.channel.IORequest;
 import org.dei.perla.core.channel.Payload;
 
 public class TcpChannel extends AbstractChannel {
+	
+	private String ipAddress;
+	private int port;
 
-	public TcpChannel(String id) {
+	public TcpChannel(String id, String ipAddress, int port) {
 		super(id);
-		// TODO Auto-generated constructor stub
+		this.ipAddress = ipAddress;
+		this.port = port;
 	}
 
 	@Override

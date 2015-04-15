@@ -1,8 +1,8 @@
 package org.dei.perla.channel.tcp;
 
+import org.apache.log4j.Logger;
 import org.dei.perla.core.channel.Channel;
 import org.dei.perla.core.channel.ChannelFactory;
-import org.dei.perla.core.channel.http.HttpChannel;
 import org.dei.perla.core.descriptor.ChannelDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 
@@ -10,18 +10,30 @@ public class TcpChannelFactory implements ChannelFactory {
 	
 	private static final String ERR_CHANNEL_CREATION = "Cannot create "
 			+ TcpChannel.class.getCanonicalName() + ": %s";
+	
+	private final Logger logger = Logger.getLogger(TcpChannelFactory.class);
 
 	@Override
 	public Class<? extends ChannelDescriptor> acceptedChannelDescriptorClass() {
-		// TODO Auto-generated method stub
-		return null;
+		return TcpChannelDescriptor.class;
 	}
 
 	@Override
 	public Channel createChannel(ChannelDescriptor descriptor)
 			throws InvalidDeviceDescriptorException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		TcpChannelDescriptor tcpDescriptor;
+		
+		if(!(descriptor instanceof TcpChannelDescriptor)){
+			String message = String.format(ERR_CHANNEL_CREATION, "expected "
+					+ TcpChannelDescriptor.class.getCanonicalName()
+					+ " but received "
+					+ descriptor.getClass().getCanonicalName() + ".");
+			logger.error(message);
+			throw new InvalidDeviceDescriptorException(message);
+		}
+		tcpDescriptor = (TcpChannelDescriptor) descriptor;
+		return new TcpChannel(tcpDescriptor.getId(), tcpDescriptor.getIpAddress(), tcpDescriptor.getPort());
 	}
 
 }
