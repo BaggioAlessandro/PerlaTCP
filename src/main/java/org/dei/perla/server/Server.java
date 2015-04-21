@@ -25,15 +25,13 @@ public class Server {
 	public void run(){
 		while(true){
 			try {
-				new Handler(serverSocketChannel.accept()).start();
+				System.out.println("Waiting for connection");
+				SocketChannel socket = serverSocketChannel.accept();
+				if(socket != null){
+					new Handler(socket).start();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
-			}finally{
-				try {
-					serverSocketChannel.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 		
@@ -47,15 +45,18 @@ public class Server {
 		ByteBuffer out;
 		
 		public Handler(SocketChannel socketChannel){
+			System.out.println("prova");
 			this.socketChannel = socketChannel;
 			in = ByteBuffer.allocate(48);
 			out = ByteBuffer.allocate(48);
 		}
 		
+		@SuppressWarnings("unused")
 		@Override
 		public void run(){
 			try {
 				int bytesRead = socketChannel.read(in);
+			
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
