@@ -1,24 +1,27 @@
 package org.dei.perla.server;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import javassist.bytecode.ByteArray;
-
-import org.apache.http.util.ByteArrayBuffer;
-import org.dei.perla.channel.tcp.TcpIORequest;
+import org.dei.perla.channel.tcp.TcpChannelFactory;
 import org.dei.perla.channel.tcp.TcpIORequest.TypeParameter;
+import org.dei.perla.channel.tcp.TcpIORequestBuilderFactory;
 import org.dei.perla.core.channel.ByteArrayPayload;
-import org.dei.perla.core.channel.IORequest;
+import org.dei.perla.core.channel.ChannelFactory;
+import org.dei.perla.core.channel.IORequestBuilderFactory;
 import org.dei.perla.core.channel.Payload;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.DeviceDescriptorParseException;
 import org.dei.perla.core.descriptor.JaxbDeviceDescriptorParser;
 import org.dei.perla.core.fpc.Fpc;
+import org.dei.perla.core.fpc.FpcFactory;
+import org.dei.perla.core.fpc.base.BaseFpcFactory;
+import org.dei.perla.core.message.MapperFactory;
+import org.dei.perla.core.message.json.JsonMapperFactory;
 
 public class Demux {
 
@@ -78,5 +81,18 @@ public class Demux {
 		ByteBuffer wrapped = ByteBuffer.wrap(byteType); // big-endian by default
 		int num = wrapped.getInt();
 		return num;
+	}
+	
+	public static FpcFactory createFpcFactory() {
+		List<MapperFactory> mhfList = new ArrayList<>();
+		mhfList.add(new JsonMapperFactory());
+
+		List<ChannelFactory> chfList = new ArrayList<>();
+		chfList.add(new TcpChannelFactory());
+
+		List<IORequestBuilderFactory> rbfList = new ArrayList<>();
+		rbfList.add(new TcpIORequestBuilderFactory());
+
+		return new BaseFpcFactory(mhfList, chfList, rbfList);
 	}
 }
