@@ -12,7 +12,12 @@ import javassist.bytecode.ByteArray;
 import org.apache.http.util.ByteArrayBuffer;
 import org.dei.perla.channel.tcp.TcpIORequest;
 import org.dei.perla.channel.tcp.TcpIORequest.TypeParameter;
+import org.dei.perla.core.channel.ByteArrayPayload;
 import org.dei.perla.core.channel.IORequest;
+import org.dei.perla.core.channel.Payload;
+import org.dei.perla.core.descriptor.DeviceDescriptor;
+import org.dei.perla.core.descriptor.DeviceDescriptorParseException;
+import org.dei.perla.core.descriptor.JaxbDeviceDescriptorParser;
 import org.dei.perla.core.fpc.Fpc;
 
 public class Demux {
@@ -27,7 +32,7 @@ public class Demux {
 		
 		int type = getType(request);
 		System.out.println("Il tipo del messaggio è " + type);
-		byte[] payload = removeHeader(request);
+		byte[] bytePayload = removeHeader(request);
 		
 		switch(type){
 			case TypeParameter.NORMAL:		
@@ -42,6 +47,15 @@ public class Demux {
 				break;
 
 			case TypeParameter.DESC:
+				Payload payload = new ByteArrayPayload(bytePayload);
+				//TODO cosa passare al posto di null? 
+				JaxbDeviceDescriptorParser descriptorParser = new JaxbDeviceDescriptorParser(null);
+				try {
+					DeviceDescriptor deviceDescriptor = descriptorParser.parse(payload.asInputStream());
+				} catch (DeviceDescriptorParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				break;
 		}
