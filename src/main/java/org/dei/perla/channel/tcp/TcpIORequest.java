@@ -28,7 +28,11 @@ public class TcpIORequest implements IORequest {
 
 	@Override
 	public void setParameter(String name, Payload payload) {
-		//TODO controllare		
+		this.payload = payload;
+	}
+	
+	public Payload getPayload(){
+		return this.payload;
 	}
 	
 	public class TypeParameter{
