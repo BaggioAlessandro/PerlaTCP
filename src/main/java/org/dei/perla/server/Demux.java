@@ -26,11 +26,16 @@ public class Demux {
 	public void demux(byte[] request){
 		
 		int type = getType(request);
+		System.out.println("Il tipo del messaggio è " + type);
+		byte[] payload = removeHeader(request);
+		
 		switch(type){
-			case TypeParameter.NORMAL:
+			case TypeParameter.NORMAL:		
+				//TODO Lookup della table e invio del payload all'fpc corretto
 				break;
 
 			case TypeParameter.CHANGE_IP:
+				//TODO 
 				break;
 
 			case TypeParameter.SHUTDOWN:
@@ -40,6 +45,10 @@ public class Demux {
 				
 				break;
 		}
+	}
+	
+	private byte[] removeHeader(byte[] request){
+		return Arrays.copyOfRange(request, Long.BYTES + TypeParameter.TYPE_LENGHT, request.length);
 	}
 	
 	/**
