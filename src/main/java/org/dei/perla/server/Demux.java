@@ -2,32 +2,15 @@ package org.dei.perla.server;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
-import javassist.bytecode.ByteArray;
-import org.apache.http.util.ByteArrayBuffer;
 import org.dei.perla.channel.tcp.TcpChannel;
-import org.dei.perla.channel.tcp.TcpIORequest;
-import org.dei.perla.channel.tcp.TcpChannelFactory;
 import org.dei.perla.channel.tcp.TcpIORequest.TypeParameter;
-import org.dei.perla.channel.tcp.TcpIORequestBuilderFactory;
 import org.dei.perla.core.channel.ByteArrayPayload;
-import org.dei.perla.core.channel.ChannelFactory;
-import org.dei.perla.core.channel.IORequestBuilderFactory;
 import org.dei.perla.core.channel.Payload;
-import org.dei.perla.core.descriptor.DeviceDescriptor;
-import org.dei.perla.core.descriptor.DeviceDescriptorParseException;
-import org.dei.perla.core.descriptor.JaxbDeviceDescriptorParser;
-import org.dei.perla.core.fpc.Fpc;
-import org.dei.perla.core.fpc.FpcFactory;
-import org.dei.perla.core.fpc.base.BaseFpcFactory;
-import org.dei.perla.core.message.MapperFactory;
-import org.dei.perla.core.message.json.JsonMapperFactory;
 
 public class Demux {
 
