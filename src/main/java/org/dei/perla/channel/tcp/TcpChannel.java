@@ -80,6 +80,7 @@ public class TcpChannel extends AbstractTCPChannel {
 			}
 			mapperHandler.put(sequence, handler);
 			mapperRequest.put(sequence, request);
+			sequence++;
 		}
 		return;
 	}

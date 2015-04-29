@@ -21,6 +21,7 @@ import org.dei.perla.core.channel.Payload;
 public class Demux {
 
 	private Map<SocketAddress, TcpChannel> lookupTable;
+
 	private Server server;
 	
 	public Demux(Server server){
@@ -59,6 +60,10 @@ public class Demux {
 
 	public void addCannel(SocketAddress address, TcpChannel channel){
 		lookupTable.put(address, channel);
+	}
+	
+	public Map<SocketAddress, TcpChannel> getLookupTable() {
+		return lookupTable;
 	}
 	
 	private InetSocketAddress getSocketAddress(byte[] request) {
