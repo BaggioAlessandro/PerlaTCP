@@ -1,12 +1,15 @@
 package org.dei.perla.server;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Optional;
 
+import org.dei.perla.channel.tcp.TcpChannel;
 import org.dei.perla.channel.tcp.TcpChannelFactory;
 import org.dei.perla.channel.tcp.TcpIORequestBuilderFactory;
 import org.dei.perla.core.channel.IOHandler;
@@ -23,7 +26,7 @@ public class Server {
 	
 	public Server(){
 		channelFactory = new TcpChannelFactory(this);
-		requestBuilderFactory = TcpIORequestBuilderFactory.getInstance();
+		requestBuilderFactory = new TcpIORequestBuilderFactory(this);
 		demux = new Demux(this);
 		try {
 			serverSocketChannel = ServerSocketChannel.open();
@@ -51,6 +54,18 @@ public class Server {
 		if(this.factoryHandler == null)
 			return;
 		factoryHandler.complete(null, Optional.ofNullable(payload));
+	}
+	
+	public void addChannel(TcpChannel channel){
+		int port = channel.getPort();
+		String ipAddress = channel.getIpAddress();
+		InetSocketAddress isAddr = null;
+		try {
+			isAddr = new InetSocketAddress(InetAddress.getByName(ipAddress), port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		demux.addCannel(isAddr, channel);
 	}
 	
 	public void run(){

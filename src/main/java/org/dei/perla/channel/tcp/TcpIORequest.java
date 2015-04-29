@@ -5,6 +5,8 @@ import org.dei.perla.core.channel.Payload;
 
 public class TcpIORequest implements IORequest {
 	
+	private static final String PAYLOAD = "payload";
+	
 	private final String id;
 	private Payload payload = null;
 	private int type;
@@ -28,7 +30,11 @@ public class TcpIORequest implements IORequest {
 
 	@Override
 	public void setParameter(String name, Payload payload) {
-		this.payload = payload;
+		if(name.equals(PAYLOAD))
+			this.payload = payload;
+		else {
+			System.out.println("Name Error");
+		}
 	}
 	
 	public Payload getPayload(){
