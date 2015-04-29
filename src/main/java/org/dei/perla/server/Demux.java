@@ -1,5 +1,6 @@
 package org.dei.perla.server;
 
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.Map;
 import javassist.bytecode.ByteArray;
 
 import org.apache.http.util.ByteArrayBuffer;
+import org.dei.perla.channel.tcp.TcpChannel;
 import org.dei.perla.channel.tcp.TcpIORequest;
 import org.dei.perla.channel.tcp.TcpIORequest.TypeParameter;
 import org.dei.perla.core.channel.ByteArrayPayload;
@@ -22,10 +24,12 @@ import org.dei.perla.core.fpc.Fpc;
 
 public class Demux {
 
-	private Map<Long, Fpc> lookupTable;
+	private Map<InetSocketAddress, TcpChannel> lookupTable;
+	private Server server;
 	
-	public Demux(){
-		lookupTable = new HashMap<Long, Fpc>();
+	public Demux(Server server){
+		lookupTable = new HashMap<InetSocketAddress, TcpChannel>();
+		this.server = server;
 	}
 	
 	public void demux(byte[] request){
@@ -48,15 +52,7 @@ public class Demux {
 
 			case TypeParameter.DESC:
 				Payload payload = new ByteArrayPayload(bytePayload);
-				//TODO cosa passare al posto di null? 
-				JaxbDeviceDescriptorParser descriptorParser = new JaxbDeviceDescriptorParser(null);
-				try {
-					DeviceDescriptor deviceDescriptor = descriptorParser.parse(payload.asInputStream());
-				} catch (DeviceDescriptorParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+				server.notifyDescriptor(payload);			
 				break;
 		}
 	}

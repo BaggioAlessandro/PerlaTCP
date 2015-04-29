@@ -5,8 +5,15 @@ import org.dei.perla.core.channel.Channel;
 import org.dei.perla.core.channel.ChannelFactory;
 import org.dei.perla.core.descriptor.ChannelDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
+import org.dei.perla.server.Server;
 
 public class TcpChannelFactory implements ChannelFactory {
+	
+	private Server server;
+	
+	public TcpChannelFactory(Server server){
+		this.server = server;
+	}
 	
 	private static final String ERR_CHANNEL_CREATION = "Cannot create "
 			+ TcpChannel.class.getCanonicalName() + ": %s";

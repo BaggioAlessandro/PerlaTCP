@@ -7,6 +7,18 @@ import org.dei.perla.core.descriptor.IORequestDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 
 public class TcpIORequestBuilderFactory implements IORequestBuilderFactory {
+	
+	private static TcpIORequestBuilderFactory tcpIORequestBuilderFactoryInstance = null;
+	
+	protected TcpIORequestBuilderFactory(){
+		
+	}
+	
+	public static TcpIORequestBuilderFactory getInstance(){
+		if(tcpIORequestBuilderFactoryInstance == null)
+			tcpIORequestBuilderFactoryInstance = new TcpIORequestBuilderFactory();
+		return tcpIORequestBuilderFactoryInstance;
+	}
 
 	private final Logger logger = Logger.getLogger(TcpIORequestBuilderFactory.class);
 	
