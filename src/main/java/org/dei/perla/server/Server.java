@@ -112,7 +112,11 @@ public class Server {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			demux.demux(in.array(), socketChannel.getRemoteAddress());
+			try {
+				demux.demux(in.array(), socketChannel.getRemoteAddress());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
