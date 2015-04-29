@@ -2,11 +2,13 @@ package org.dei.perla.server;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 
@@ -18,15 +20,15 @@ import org.dei.perla.core.channel.Payload;
 
 public class Demux {
 
-	private Map<InetSocketAddress, TcpChannel> lookupTable;
+	private Map<SocketAddress, TcpChannel> lookupTable;
 	private Server server;
 	
 	public Demux(Server server){
-		lookupTable = new HashMap<InetSocketAddress, TcpChannel>();
+		lookupTable = new HashMap<SocketAddress, TcpChannel>();
 		this.server = server;
 	}
 	
-	public void demux(byte[] request, InetSocketAddress sender){
+	public void demux(byte[] request, SocketAddress sender){
 		
 		int type = getType(request);
 		System.out.println("Il tipo del messaggio è " + type);
@@ -55,7 +57,7 @@ public class Demux {
 		}
 	}
 
-	public void addCannel(InetSocketAddress address, TcpChannel channel){
+	public void addCannel(SocketAddress address, TcpChannel channel){
 		lookupTable.put(address, channel);
 	}
 	
