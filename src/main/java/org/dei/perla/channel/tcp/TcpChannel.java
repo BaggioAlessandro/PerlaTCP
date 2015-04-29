@@ -99,6 +99,31 @@ public class TcpChannel extends AbstractTCPChannel {
 			notifyAsyncData(effectivePayload);
 		}
 	}
+	
+	public synchronized void changeSocket(InetSocketAddress address){
+		try {
+			socket.close();
+		} catch (IOException e) {
+			logger.error("an error has occurred while closing socket for the socket change", e);
+			e.printStackTrace();
+		}
+		
+		try {
+			socket = SocketChannel.open();			
+			socket.connect(address);
+		} catch (IOException e) {
+			logger.error("an error has occurred while creating new connection during the change of IP", e);
+			e.printStackTrace();
+		}
+	}
+	
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public int getPort() {
+		return port;
+	}
 
 	private int getRequestId(ByteBuffer buff) {
 		int start = 0;
