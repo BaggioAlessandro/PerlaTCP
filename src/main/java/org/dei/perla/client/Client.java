@@ -1,35 +1,35 @@
 package org.dei.perla.client;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 public class Client {
+	
+	private SocketChannel serverSocket;
 
-	public static void main(String[] args) throws IOException {
-		SocketChannel socketChannel = SocketChannel.open();
-		socketChannel.connect(new InetSocketAddress("127.0.0.1", 9999));
-		
-		byte[] packet = new byte[48];
-		
-		long id = 120;
-		byte[] id_to_byte = longToBytes(id);
-		
-		for(int i = 0; i < Long.BYTES; i++){
-			packet[i] = id_to_byte[i];
+	public Client(SocketAddress address){
+		try {
+			serverSocket = SocketChannel.open();
+			serverSocket.connect(address);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
-		ByteBuffer buff = ByteBuffer.wrap(packet);
-		
-		buff.flip();
-		
-		socketChannel.write(buff);
 	}
-
-	private static byte[] longToBytes(long x) {
-	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-	    buffer.putLong(x);
-	    return buffer.array();
+	
+	public void sendPacket(byte[] packet){
+		ByteBuffer buffer = ByteBuffer.wrap(packet);
+		
+		buffer.flip();
+		
+		while(buffer.hasRemaining()) {
+			try {
+				serverSocket.write(buffer);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
