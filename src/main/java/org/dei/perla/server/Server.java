@@ -3,7 +3,6 @@ package org.dei.perla.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
@@ -20,9 +19,9 @@ import org.dei.perla.core.utils.Conditions;
 public class Server {
 	
 	private Demux demux;	
-	ServerSocketChannel serverSocketChannel;
-	TcpChannelFactory channelFactory;
-	TcpIORequestBuilderFactory requestBuilderFactory;
+	private ServerSocketChannel serverSocketChannel;
+	private TcpChannelFactory channelFactory;
+	private TcpIORequestBuilderFactory requestBuilderFactory;
 	private IOHandler factoryHandler = null;
 	
 	public Server(){
@@ -40,6 +39,10 @@ public class Server {
 	
 	public TcpChannelFactory getChannelFactory(){
 		return this.channelFactory;
+	}
+	
+	public TcpIORequestBuilderFactory getIoRequestBuilderFactory(){
+		return this.requestBuilderFactory;
 	}
 	
 	public void setFactoryIOHandler(IOHandler handler)
