@@ -1,10 +1,14 @@
 package org.dei.perla.server;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+
 
 
 import org.dei.perla.channel.tcp.TcpChannel;
@@ -22,7 +26,7 @@ public class Demux {
 		this.server = server;
 	}
 	
-	public void demux(byte[] request){
+	public void demux(byte[] request, InetSocketAddress sender){
 		
 		int type = getType(request);
 		System.out.println("Il tipo del messaggio è " + type);
@@ -30,11 +34,15 @@ public class Demux {
 		
 		switch(type){
 			case TypeParameter.NORMAL:		
-				//TODO Lookup della table e invio del payload all'fpc corretto
+				lookupTable.get(sender).notifyRequestCompleted(new ByteArrayPayload(request));
 				break;
 
 			case TypeParameter.CHANGE_IP:
-				//TODO 
+				InetSocketAddress address = getSocketAddress(request);
+				if(address != null)
+					lookupTable.get(sender).changeSocket(address);
+				else
+					//TODO lancia eccezzione o altro?
 				break;
 
 			case TypeParameter.SHUTDOWN:
@@ -46,13 +54,31 @@ public class Demux {
 				break;
 		}
 	}
-	
+
 	public void addCannel(InetSocketAddress address, TcpChannel channel){
 		lookupTable.put(address, channel);
 	}
 	
+	private InetSocketAddress getSocketAddress(byte[] request) {
+		byte[] bytePort = Arrays.copyOfRange(request, 0, Integer.BYTES);
+		ByteBuffer wrapped = ByteBuffer.wrap(bytePort); // big-endian by default
+		int port = wrapped.getInt();
+		
+		byte[] byteIP = Arrays.copyOfRange(request, Integer.BYTES, request.length);
+		
+		InetAddress ip = null;
+		try {
+			ip = InetAddress.getByAddress(byteIP);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		
+		return new InetSocketAddress(ip, port);
+
+	}
+	
 	private byte[] removeHeader(byte[] request){
-		return Arrays.copyOfRange(request, Long.BYTES + TypeParameter.TYPE_LENGHT, request.length);
+		return Arrays.copyOfRange(request, TypeParameter.TYPE_LENGHT, request.length);
 	}
 	
 	/**
@@ -61,7 +87,7 @@ public class Demux {
 	 * @return {@code Integer} conversion
 	 */
 	public static int getType(byte[] bytes){
-		int start = Long.BYTES;
+		int start = 0;
 		int offset = TypeParameter.TYPE_LENGHT;
 		
 		byte[] byteType = Arrays.copyOfRange(bytes, start, start + offset);
