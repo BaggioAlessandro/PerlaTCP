@@ -65,7 +65,12 @@ public class Server {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		demux.addCannel(isAddr, channel);
+		if(isAddr != null)
+			demux.addCannel(isAddr, channel);
+		else {
+			//TODO gestire eccezione
+			System.out.println("Error");
+		}
 	}
 	
 	public void run(){

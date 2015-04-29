@@ -33,6 +33,7 @@ public class TcpIORequest implements IORequest {
 		if(name.equals(PAYLOAD))
 			this.payload = payload;
 		else {
+			//TODO gestire eccezione
 			System.out.println("Name Error");
 		}
 	}
