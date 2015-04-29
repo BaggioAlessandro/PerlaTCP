@@ -3,6 +3,7 @@ package org.dei.perla.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
@@ -111,7 +112,7 @@ public class Server {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			demux.demux(in.array());
+			demux.demux(in.array(), socketChannel.getRemoteAddress());
 		}
 	}
 	
