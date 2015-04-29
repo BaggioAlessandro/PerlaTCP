@@ -59,9 +59,13 @@ public class Demux {
 
 			case TypeParameter.DESC:
 				Payload payload = new ByteArrayPayload(bytePayload);
-				server.notifyDescriptor(payload);			
+				server.notifyDescriptor(payload);	
 				break;
 		}
+	}
+	
+	public void addCannel(InetSocketAddress address, TcpChannel channel){
+		lookupTable.put(address, channel);
 	}
 	
 	private byte[] removeHeader(byte[] request){

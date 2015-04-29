@@ -7,20 +7,15 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
-import org.dei.perla.channel.tcp.TcpIORequest.TypeParameter;
-import org.dei.perla.core.channel.AbstractChannel;
 import org.dei.perla.core.channel.ByteArrayPayload;
 import org.dei.perla.core.channel.ChannelException;
 import org.dei.perla.core.channel.IOHandler;
 import org.dei.perla.core.channel.IORequest;
 import org.dei.perla.core.channel.Payload;
-import org.dei.perla.core.channel.http.HttpChannel;
-import org.dei.perla.core.channel.http.HttpIORequest;
 
 public class TcpChannel extends AbstractTCPChannel {
 	
