@@ -21,7 +21,7 @@ public abstract class AbstractAsyncChannel implements Channel{
 	private final Logger log;
 
 	private final String id;
-	private final BlockingQueue<TcpFutureIOTask> pending = new LinkedBlockingQueue<>();
+	private final BlockingQueue<AsyncFutureIOTask> pending = new LinkedBlockingQueue<>();
 	private volatile IOHandler asyncHandler = null;
 
 	// Coordination between threads achieved through CAS
@@ -58,13 +58,13 @@ public abstract class AbstractAsyncChannel implements Channel{
 		if (stopped.get()) {
 			throw new ChannelException();
 		}
-		TcpFutureIOTask task = new TcpFutureIOTask(request, handler);
+		AsyncFutureIOTask task = new AsyncFutureIOTask(request, handler);
 		pending.add(task);
 		return task;
 	}
 
 	private void dispatch() {
-		TcpFutureIOTask task;
+		AsyncFutureIOTask task;
 		while (!stopped.get() && !Thread.currentThread().isInterrupted()) {
 			try {
 				task = pending.take();
@@ -173,7 +173,7 @@ public abstract class AbstractAsyncChannel implements Channel{
 	 * @author Guido Rota (2014)
 	 *
 	 */
-	private class TcpFutureIOTask implements IOTask {
+	private class AsyncFutureIOTask implements IOTask {
 
 		private static final int NEW = 0;
 		private static final int RUNNING = 1;
@@ -190,7 +190,7 @@ public abstract class AbstractAsyncChannel implements Channel{
 		private Payload result = null;
 		private ChannelException exception = null;
 
-		public TcpFutureIOTask(final IORequest request, final IOHandler handler) {
+		public AsyncFutureIOTask(final IORequest request, final IOHandler handler) {
 			this.request = request;
 			this.handler = handler;
 		}
