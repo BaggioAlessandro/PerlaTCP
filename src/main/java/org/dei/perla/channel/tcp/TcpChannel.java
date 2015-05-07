@@ -17,7 +17,7 @@ import org.dei.perla.core.channel.IOHandler;
 import org.dei.perla.core.channel.IORequest;
 import org.dei.perla.core.channel.Payload;
 
-public class TcpChannel extends AbstractTCPChannel {
+public class TcpChannel extends AbstractAsynchronousChannel {
 	
 	private Logger logger = Logger.getLogger(TcpChannel.class);
 	private String ipAddress;
