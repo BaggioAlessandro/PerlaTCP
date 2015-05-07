@@ -47,7 +47,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 	}
 
 	@Override
-	public void handleRequest(IORequest request, IOHandler handler) throws ChannelException,
+	public synchronized void handleRequest(IORequest request, IOHandler handler) throws ChannelException,
 			InterruptedException {
 		TcpIORequest tcpRequest;
 		
@@ -86,7 +86,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 		return;
 	}
 	
-	public void notifyRequestCompleted(Payload payload){
+	public synchronized void notifyRequestCompleted(Payload payload){
 		ByteBuffer buff = payload.asByteBuffer();
 		int requestId = getRequestId(buff);
 		

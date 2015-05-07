@@ -62,10 +62,6 @@ public class Demux {
 		lookupTable.put(address, channel);
 	}
 	
-	public Map<SocketAddress, TcpChannel> getLookupTable() {
-		return lookupTable;
-	}
-	
 	private InetSocketAddress getSocketAddress(byte[] request) {
 		byte[] bytePort = Arrays.copyOfRange(request, 0, Integer.BYTES);
 		ByteBuffer wrapped = ByteBuffer.wrap(bytePort); // big-endian by default
