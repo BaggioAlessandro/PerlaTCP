@@ -33,8 +33,7 @@ public class TcpIORequest implements IORequest {
 		if(name.equals(PAYLOAD))
 			this.payload = payload;
 		else {
-			//TODO gestire eccezione
-			System.out.println("Name Error");
+			throw new IllegalArgumentException("TCPIORequest have only 'Payload' as name parameter");
 		}
 	}
 	

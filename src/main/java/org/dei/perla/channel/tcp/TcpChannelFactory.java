@@ -10,7 +10,6 @@ import org.dei.perla.server.Server;
 public class TcpChannelFactory implements ChannelFactory {
 	
 	private Server server;
-	private TcpChannel channel;
 	
 	public TcpChannelFactory(Server server){
 		this.server = server;
@@ -41,7 +40,7 @@ public class TcpChannelFactory implements ChannelFactory {
 			throw new InvalidDeviceDescriptorException(message);
 		}
 		tcpDescriptor = (TcpChannelDescriptor) descriptor;
-		channel = new TcpChannel(tcpDescriptor.getId(), tcpDescriptor.getIpAddress(), tcpDescriptor.getPort());
+		TcpChannel channel = new TcpChannel(tcpDescriptor.getId(), tcpDescriptor.getIpAddress(), tcpDescriptor.getPort());
 		server.addChannel(channel);
 		return channel;
 	}
