@@ -16,7 +16,7 @@ import org.dei.perla.core.channel.IOTaskCancelledException;
 import org.dei.perla.core.channel.Payload;
 import org.dei.perla.core.utils.Conditions;
 
-public abstract class AbstractAsynchronousChannel implements Channel{
+public abstract class AbstractAsyncChannel implements Channel{
 
 	private final Logger log;
 
@@ -29,7 +29,7 @@ public abstract class AbstractAsynchronousChannel implements Channel{
 	// Worker thread used to sequentially perform the submitted requests
 	private final Thread thread;
 
-	public AbstractAsynchronousChannel(String id) {
+	public AbstractAsyncChannel(String id) {
 		this.id = id;
 		log = Logger.getLogger(this.getClass().getCanonicalName() + "_" + id);
 		thread = new Thread(this::dispatch);
