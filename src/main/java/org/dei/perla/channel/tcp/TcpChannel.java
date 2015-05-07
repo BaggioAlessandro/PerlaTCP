@@ -67,7 +67,8 @@ public class TcpChannel extends AbstractTCPChannel {
 		//add as header of the payload the id of the current sequence
 		ByteBuffer bufferToSend = ByteBuffer.allocate(Integer.BYTES + payloadBuffer.capacity()).putInt(sequence);
 		
-		bufferToSend.put(payloadBuffer.array(), Integer.BYTES, Integer.BYTES + payloadBuffer.capacity());
+		//TODO Verificare che i parametri siano giusti
+		bufferToSend.put(payloadBuffer.array(), Integer.BYTES, payloadBuffer.capacity());
 		
 		bufferToSend.flip();
 
