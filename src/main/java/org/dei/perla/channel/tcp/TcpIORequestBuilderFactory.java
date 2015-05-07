@@ -9,10 +9,9 @@ import org.dei.perla.server.Server;
 
 public class TcpIORequestBuilderFactory implements IORequestBuilderFactory {
 	
-	private Server server;
 	
-	public TcpIORequestBuilderFactory(Server server){
-		this.server = server;
+	public TcpIORequestBuilderFactory(){
+		super();
 	}
 
 	private final Logger logger = Logger.getLogger(TcpIORequestBuilderFactory.class);
