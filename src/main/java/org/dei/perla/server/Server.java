@@ -26,7 +26,7 @@ public class Server {
 	
 	public Server(){
 		channelFactory = new TcpChannelFactory(this);
-		requestBuilderFactory = new TcpIORequestBuilderFactory(this);
+		requestBuilderFactory = new TcpIORequestBuilderFactory();
 		demux = new Demux(this);
 		try {
 			serverSocketChannel = ServerSocketChannel.open();

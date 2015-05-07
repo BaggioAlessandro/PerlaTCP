@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<device type="test-html" xmlns="http://perla.dei.org/device"
+	xmlns:ue="http://perla.dei.org/fpc/message/urlencoded" xmlns:ht="http://perla.dei.org/channel/http"
+	xmlns:js="http://perla.dei.org/fpc/message/json">
+
+	<channels>
+		<ht:channel id="http_ch_01" />
+	</channels>
+	<requests>
+		<ht:request id="get_all_info"
+			host="http://api.openweathermap.org/data/2.5/weather" method="get" />
+
+		<ht:request id="post_all_info"
+			host="http://api.openweathermap.org/data/2.5/weather" method="post"
+			content-type="application/x-www-form-urlencoded" />
+
+		<ht:request id="put_all_info"
+			host="http://api.openweathermap.org/data/2.5/weather" method="put" />
+
+		<ht:request id="del_all_info"
+			host="http://api.openweathermap.org/data/2.5/weather" method="delete" />
+	</requests>
+</device>
