@@ -70,7 +70,7 @@ public class Server {
 			e.printStackTrace();
 		}
 		if(isAddr != null)
-			demux.addCannel(isAddr, channel);
+			demux.addChannel(isAddr, channel);
 		else {
 			//TODO gestire eccezione
 			System.out.println("Error");

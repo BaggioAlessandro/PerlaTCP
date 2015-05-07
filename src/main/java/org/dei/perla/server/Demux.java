@@ -58,7 +58,7 @@ public class Demux {
 		}
 	}
 
-	public void addCannel(SocketAddress address, TcpChannel channel){
+	public void addChannel(SocketAddress address, TcpChannel channel){
 		lookupTable.put(address, channel);
 	}
 	
