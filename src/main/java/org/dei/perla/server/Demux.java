@@ -80,6 +80,10 @@ public class Demux {
 
 	}
 	
+	public Map<SocketAddress, TcpChannel> getLookupTable() {
+		return lookupTable;
+	}
+	
 	private byte[] removeHeader(byte[] request){
 		return Arrays.copyOfRange(request, TypeParameter.TYPE_LENGHT, request.length);
 	}

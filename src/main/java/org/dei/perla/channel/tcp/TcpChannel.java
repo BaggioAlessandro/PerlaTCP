@@ -39,6 +39,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 		try {
 			socket = SocketChannel.open();
 			socket.connect(new InetSocketAddress(InetAddress.getByName(this.ipAddress), this.port));
+			System.out.println("Channel connesso con ip " + ipAddress + " e porta " + port);
 			socket.configureBlocking(false);
 		} catch (IOException e) {
 			logger.error("an error has occurred while creating socket connection", e);

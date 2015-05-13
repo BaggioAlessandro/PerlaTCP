@@ -77,6 +77,10 @@ public class Server {
 		}
 	}
 	
+	public Demux getDemux(){
+		return this.demux;
+	}
+	
 	public void run(){
 		while(true){
 			try {
