@@ -93,9 +93,14 @@ public class TcpChannel extends AbstractAsyncChannel {
 	
 	public synchronized void notifyRequestCompleted(Payload payload){
 		ByteBuffer buff = payload.asByteBuffer();
-		int requestId = getRequestId(buff);
+		byte[] byteID = new byte[buff.capacity()];
+		buff.get(byteID, 0, byteID.length);
+		ByteBuffer wrapped = ByteBuffer.wrap(byteID); // big-endian by default
+		int requestId = getRequestId(wrapped);
 		
-		byte[] effectiveByteArray = removeHeader(buff.array());
+		System.out.println("richiesta numero " + requestId);
+		
+		byte[] effectiveByteArray = removeHeader(wrapped.array());
 		
 		ByteArrayPayload effectivePayload = new ByteArrayPayload(effectiveByteArray);
 		
@@ -143,8 +148,8 @@ public class TcpChannel extends AbstractAsyncChannel {
 	private int getRequestId(ByteBuffer buff) {
 		int start = 0;
 		int offset = Integer.BYTES;
-		
-		byte[] byteID = Arrays.copyOfRange(buff.array(), start, start + offset);
+		byte[] byteID = new byte[Integer.BYTES];
+		buff.get(byteID, start, offset);
 		ByteBuffer wrapped = ByteBuffer.wrap(byteID); // big-endian by default
 		int num = wrapped.getInt();
 		return num;

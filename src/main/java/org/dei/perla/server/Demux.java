@@ -39,9 +39,6 @@ public class Demux {
 		
 		switch(type){
 			case TypeParameter.NORMAL:	
-				System.out.println(sender);
-				System.out.println(lookupTable.get(sender));
-				System.out.println(lookupTable.size());
 				lookupTable.get(sender).notifyRequestCompleted(new ByteArrayPayload(bytePayload));
 				break;
 
