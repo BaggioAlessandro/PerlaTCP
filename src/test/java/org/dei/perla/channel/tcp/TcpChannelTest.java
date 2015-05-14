@@ -106,7 +106,7 @@ public class TcpChannelTest {
 	
 	@Test
 	public void sendPacketToServer() throws InterruptedException{
-		byte[] packet = {0,0,0,0,1};
+		byte[] packet = {0,0,0,1000,1};
 		client.sendPacket(packet);
 		//Thread.sleep(1000);
 		byte[] lastReceived = server.getLastReceived();

@@ -106,7 +106,7 @@ public class Demux {
 		
 		
 		ByteBuffer wrapped = ByteBuffer.wrap(byteType);
-		wrapped.order(ByteOrder.LITTLE_ENDIAN);
+		//wrapped.order(ByteOrder.LITTLE_ENDIAN);
 		//wrapped.put(byteType); // big-endian by default
 		int num = wrapped.getInt();
 		System.out.println(num);
