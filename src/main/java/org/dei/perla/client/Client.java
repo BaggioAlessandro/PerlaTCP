@@ -28,6 +28,11 @@ public class Client {
 		}
 	}
 	
+	public int getSendingPort() throws IOException{
+		InetSocketAddress addr = (InetSocketAddress) socket.getLocalAddress();
+		return addr.getPort();
+	}
+	
 	public void run(){
 		while(true){
 			try {

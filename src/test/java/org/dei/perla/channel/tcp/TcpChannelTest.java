@@ -8,12 +8,17 @@ import static org.junit.Assert.assertTrue;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
 import org.dei.perla.client.Client;
+import org.dei.perla.core.channel.Payload;
+import org.dei.perla.core.channel.SynchronizerIOHandler;
+import org.dei.perla.core.channel.http.HttpIORequest;
+import org.dei.perla.core.channel.http.HttpIORequestDescriptor.HttpMethod;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 import org.dei.perla.server.Demux;
@@ -66,6 +71,7 @@ public class TcpChannelTest {
 		StreamSource xml = new StreamSource(descriptorPath);
 		device = unmarshaller.unmarshal(xml, DeviceDescriptor.class).getValue();
 		descriptor = (TcpChannelDescriptor) device.getChannelList().get(0);
+		descriptor.setSrcPort(client.getSendingPort());
 	}
 	
 	
@@ -74,10 +80,14 @@ public class TcpChannelTest {
 		channel = (TcpChannel) channelFactory.createChannel(descriptor);
 		assertNotNull(channel);
 		assertFalse(channel.isClosed());
-		int port = descriptor.getPort();
-		String ipAddress = descriptor.getIpAddress();
-		assertEquals(channel.getPort(), port);
-		assertEquals(channel.getIpAddress(), ipAddress);
+		int destPort = descriptor.getDestPort();
+		String destIpAddress = descriptor.getDestIpAddress();
+		int srcPort = descriptor.getDestPort();
+		String srcIpAddress = descriptor.getDestIpAddress();
+		assertEquals(channel.getDestPort(), destPort);
+		assertEquals(channel.getDestIpAddress(), destIpAddress);
+		assertEquals(channel.getSrcPort(), srcPort);
+		assertEquals(channel.getSrcIpAddress(), srcIpAddress);
 	}
 	
 	
@@ -87,8 +97,8 @@ public class TcpChannelTest {
 		demux.getLookupTable();
 		int dimension = 1;
 		assertEquals(demux.getLookupTable().size(), dimension);
-		String ipAddress = channel.getIpAddress();
-		int port = channel.getPort();
+		String ipAddress = channel.getSrcIpAddress();
+		int port = channel.getSrcPort();
 		InetSocketAddress socketAddress = null;
 		try {
 			socketAddress = new InetSocketAddress(InetAddress.getByName(ipAddress),port);
@@ -100,13 +110,17 @@ public class TcpChannelTest {
 	
 
 	@Test
-	public void sendPacketToClient(){
-		
+	public void sendPacketToClient() throws RuntimeException, ExecutionException, InterruptedException{
+		String requestId = "-test-";
+		TcpIORequest request = new TcpIORequest(requestId);
+		SynchronizerIOHandler syncHandler = new SynchronizerIOHandler();
+		channel.submit(request, syncHandler);
+		Payload response = syncHandler.getResult().orElseThrow(RuntimeException::new);
 	}
 	
 	@Test
 	public void sendPacketToServer() throws InterruptedException{
-		byte[] packet = {0,0,0,1000,1};
+		byte[] packet = {0,0,0,0,1};
 		client.sendPacket(packet);
 		//Thread.sleep(1000);
 		byte[] lastReceived = server.getLastReceived();
