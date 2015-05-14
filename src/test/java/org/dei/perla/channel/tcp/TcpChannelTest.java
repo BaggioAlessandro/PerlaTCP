@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
@@ -72,6 +73,7 @@ public class TcpChannelTest {
 		device = unmarshaller.unmarshal(xml, DeviceDescriptor.class).getValue();
 		descriptor = (TcpChannelDescriptor) device.getChannelList().get(0);
 		descriptor.setSrcPort(client.getSendingPort());
+		clientPort = client.getSendingPort();
 	}
 	
 	
@@ -82,8 +84,8 @@ public class TcpChannelTest {
 		assertFalse(channel.isClosed());
 		int destPort = descriptor.getDestPort();
 		String destIpAddress = descriptor.getDestIpAddress();
-		int srcPort = descriptor.getDestPort();
-		String srcIpAddress = descriptor.getDestIpAddress();
+		int srcPort = descriptor.getSrcPort();
+		String srcIpAddress = descriptor.getSrcIpAddress();
 		assertEquals(channel.getDestPort(), destPort);
 		assertEquals(channel.getDestIpAddress(), destIpAddress);
 		assertEquals(channel.getSrcPort(), srcPort);
@@ -113,21 +115,24 @@ public class TcpChannelTest {
 	public void sendPacketToClient() throws RuntimeException, ExecutionException, InterruptedException{
 		String requestId = "-test-";
 		TcpIORequest request = new TcpIORequest(requestId);
+		//TODO riempi la request con un payload
 		SynchronizerIOHandler syncHandler = new SynchronizerIOHandler();
 		channel.submit(request, syncHandler);
+		//TODO assert he controlla se il payload mandato è uguale a quello ricevuto
+		//TODO il clint risponde qualcosa
 		Payload response = syncHandler.getResult().orElseThrow(RuntimeException::new);
+		//TODO controlla che le risp coincidano
 	}
 	
 	@Test
 	public void sendPacketToServer() throws InterruptedException{
-		byte[] packet = {0,0,0,0,1};
+		byte[] packet = {0,0,0,0,1,0,0,0,0,1};
 		client.sendPacket(packet);
 		//Thread.sleep(1000);
 		byte[] lastReceived = server.getLastReceived();
-		for(int i=0; i < lastReceived.length; i++){
-			System.out.println(lastReceived[i]);
+		for(int i=0; i < packet.length; i++){
+			assertEquals(packet[i], lastReceived[i]);
 		}
-		assertEquals(packet, lastReceived);
 	}
 	
 	@Test
