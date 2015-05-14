@@ -5,9 +5,11 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 
@@ -36,12 +38,15 @@ public class Demux {
 		byte[] bytePayload = removeHeader(request);
 		
 		switch(type){
-			case TypeParameter.NORMAL:		
-				lookupTable.get(sender).notifyRequestCompleted(new ByteArrayPayload(request));
+			case TypeParameter.NORMAL:	
+				System.out.println(sender);
+				System.out.println(lookupTable.get(sender));
+				System.out.println(lookupTable.size());
+				lookupTable.get(sender).notifyRequestCompleted(new ByteArrayPayload(bytePayload));
 				break;
 
 			case TypeParameter.CHANGE_IP:
-				InetSocketAddress address = getSocketAddress(request);
+				InetSocketAddress address = getSocketAddress(bytePayload);
 				if(address != null)
 					lookupTable.get(sender).changeSocket(address);
 				else
@@ -98,8 +103,13 @@ public class Demux {
 		int offset = TypeParameter.TYPE_LENGHT;
 		
 		byte[] byteType = Arrays.copyOfRange(bytes, start, start + offset);
-		ByteBuffer wrapped = ByteBuffer.wrap(byteType); // big-endian by default
+		
+		
+		ByteBuffer wrapped = ByteBuffer.wrap(byteType);
+		wrapped.order(ByteOrder.LITTLE_ENDIAN);
+		//wrapped.put(byteType); // big-endian by default
 		int num = wrapped.getInt();
+		System.out.println(num);
 		return num;
 	}
 	

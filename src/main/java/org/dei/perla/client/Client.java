@@ -2,17 +2,15 @@ package org.dei.perla.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-
-import org.dei.perla.server.Server.Handler;
 
 public class Client {
 	
 	private SocketChannel socket;
 	private ServerSocketChannel serverSocketChannel;
+	private byte[] lastReceived;
 
 	public Client(InetSocketAddress address, int port){
 		try {
@@ -30,8 +28,24 @@ public class Client {
 		}
 	}
 	
+	public void run(){
+		while(true){
+			try {
+				SocketChannel socket = serverSocketChannel.accept();
+				if(socket != null){
+					new Handler(socket).start();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void sendPacket(byte[] packet){
-		ByteBuffer buffer = ByteBuffer.wrap(packet);
+		
+		ByteBuffer buffer = ByteBuffer.allocate(48);
+		buffer.clear();
+		buffer.put(packet);
 		
 		buffer.flip();
 		
@@ -42,6 +56,34 @@ public class Client {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("invio finito");
+	}
+
+	public byte[] getLastReceived(){
+		return lastReceived;
 	}
 	
+	private class Handler extends Thread{
+		
+		private SocketChannel socketChannel;
+		private ByteBuffer in;
+		
+		public Handler(SocketChannel socketChannel){
+			this.socketChannel = socketChannel;
+			in = ByteBuffer.allocate(48);
+		}
+		
+		@Override
+		public void run(){
+			while(true){
+				try {
+					socketChannel.read(in);
+				
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				lastReceived = in.array();
+			}
+		}
+	}
 }

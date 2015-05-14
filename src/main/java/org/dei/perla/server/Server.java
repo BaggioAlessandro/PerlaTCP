@@ -23,14 +23,17 @@ public class Server {
 	private TcpChannelFactory channelFactory;
 	private TcpIORequestBuilderFactory requestBuilderFactory;
 	private IOHandler factoryHandler = null;
+	public static final int port = 9999;
 	
+	private byte[] lastReceived;
+
 	public Server(){
 		channelFactory = new TcpChannelFactory(this);
 		requestBuilderFactory = new TcpIORequestBuilderFactory();
 		demux = new Demux(this);
 		try {
 			serverSocketChannel = ServerSocketChannel.open();
-			serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+			serverSocketChannel.socket().bind(new InetSocketAddress(port));
 			serverSocketChannel.configureBlocking(false);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -66,6 +69,7 @@ public class Server {
 		InetSocketAddress isAddr = null;
 		try {
 			isAddr = new InetSocketAddress(InetAddress.getByName(ipAddress), port);
+			System.out.println(isAddr);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -84,7 +88,6 @@ public class Server {
 	public void run(){
 		while(true){
 			try {
-				System.out.println("Waiting for connection");
 				SocketChannel socket = serverSocketChannel.accept();
 				if(socket != null){
 					new Handler(socket).start();
@@ -93,36 +96,41 @@ public class Server {
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
+	public byte[] getLastReceived(){
+		return lastReceived;
+	}
 	
-	public class Handler extends Thread{
+	private class Handler extends Thread{
 		
 		private SocketChannel socketChannel;
-		ByteBuffer in;
-		ByteBuffer out;
+		private ByteBuffer in;
 		
 		public Handler(SocketChannel socketChannel){
-			System.out.println("prova");
 			this.socketChannel = socketChannel;
 			in = ByteBuffer.allocate(48);
-			out = ByteBuffer.allocate(48);
 		}
 		
-		@SuppressWarnings("unused")
 		@Override
 		public void run(){
-			try {
-				int bytesRead = socketChannel.read(in);
-			
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				demux.demux(in.array(), socketChannel.getRemoteAddress());
-			} catch (IOException e) {
-				e.printStackTrace();
+			System.out.println("test!!!!!");
+			while(true){
+				try {
+					System.out.println("leggi");
+					socketChannel.read(in);
+				
+				} catch (IOException e) {
+					e.printStackTrace();
+					break;
+				}
+				try {
+					lastReceived = in.array();
+					demux.demux(in.array(), socketChannel.getRemoteAddress());
+				} catch (IOException e) {
+					e.printStackTrace();
+					break;
+				}
 			}
 		}
 	}

@@ -48,7 +48,7 @@ public class TcpIORequest implements IORequest {
 		public static final int SHUTDOWN = 2;
 		public static final int DESC = 3;
 		
-		public static final int TYPE_LENGHT = 1;
+		public static final int TYPE_LENGHT = Integer.BYTES;
 	}
 	
 	/*

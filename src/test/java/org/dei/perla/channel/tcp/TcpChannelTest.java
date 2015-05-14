@@ -37,14 +37,19 @@ public class TcpChannelTest {
 	public static void initialize() throws Exception{
 		
 		server = new Server();
+		Thread serverThread = new Thread(new ServerRunnable());
+        serverThread.start();
 		
 		//creazione del Client per creare il ServerSocket al quale il Channel dovrà connettersi quando 
 		//verrà creato
 		String serverIpAddress = "127.0.0.1";
-		int serverPort = 9999;
+		int serverPort = Server.port;
 		int clientPort = 3456;
 		InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(serverIpAddress), serverPort);
+		
 		client = new Client(address, clientPort);
+		Thread clientThread = new Thread(new ClientRunnable());
+		clientThread.start();
 		
 		channelFactory = server.getChannelFactory();
 		
@@ -66,14 +71,6 @@ public class TcpChannelTest {
 	
 	@Test
 	public void startupTest() throws InvalidDeviceDescriptorException {
-		
-		/*
-		 * Metodi per avviare il Server in ascolto
-		 * 
-		 * Thread serverThread = new Thread(new ServerRunnable());
-         *	serverThread.start();
-		 */
-        
 		channel = (TcpChannel) channelFactory.createChannel(descriptor);
 		assertNotNull(channel);
 		assertFalse(channel.isClosed());
@@ -101,6 +98,23 @@ public class TcpChannelTest {
 		assertEquals(demux.getLookupTable().get(socketAddress), channel);
 	}
 	
+
+	@Test
+	public void sendPacketToClient(){
+		
+	}
+	
+	@Test
+	public void sendPacketToServer() throws InterruptedException{
+		byte[] packet = {0,0,0,0,1};
+		client.sendPacket(packet);
+		//Thread.sleep(1000);
+		byte[] lastReceived = server.getLastReceived();
+		for(int i=0; i < lastReceived.length; i++){
+			System.out.println(lastReceived[i]);
+		}
+		assertEquals(packet, lastReceived);
+	}
 	
 	@Test
 	public void shutDownTest(){
@@ -109,7 +123,8 @@ public class TcpChannelTest {
 	}
 	
 	
-	class ServerRunnable implements Runnable{
+	
+	static class ServerRunnable implements Runnable{
 
 		@Override
 		public void run() {
@@ -118,5 +133,13 @@ public class TcpChannelTest {
 		
 	}
 	
+	static class ClientRunnable implements Runnable{
+
+		@Override
+		public void run() {
+			client.run();			
+		}
+		
+	}
 
 }
