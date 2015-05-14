@@ -17,7 +17,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.dei.perla.client.Client;
 import org.dei.perla.core.channel.Payload;
-import org.dei.perla.core.channel.SynchronizerIOHandler;
+import org.dei.perla.channel.tcp.SynchronizerIOHandler;
 import org.dei.perla.core.channel.http.HttpIORequest;
 import org.dei.perla.core.channel.http.HttpIORequestDescriptor.HttpMethod;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
