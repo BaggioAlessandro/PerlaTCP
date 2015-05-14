@@ -12,26 +12,38 @@ import org.dei.perla.core.descriptor.ChannelDescriptor;
 public class TcpChannelDescriptor extends ChannelDescriptor {
 	
 	@XmlAttribute(required = true)
-	private String ipAddress;
+	private String srcIpAddress;
 	
 	@XmlAttribute(required = true)
-	private int port;
+	private int srcPort;
 	
-	/**
-	 * 
-	 * @return the Ip Address of the device 
-	 */
-	public String getIpAddress(){
-		return this.ipAddress;
+	@XmlAttribute(required = true)
+	private String destIpAddress;
+	
+	@XmlAttribute(required = true)
+	private int destPort;
+
+	
+	public String getSrcIpAddress() {
+		return srcIpAddress;
+	}
+
+	public int getSrcPort() {
+		return srcPort;
+	}
+
+	public String getDestIpAddress() {
+		return destIpAddress;
+	}
+
+	public int getDestPort() {
+		return destPort;
 	}
 	
-	/**
-	 * 
-	 * @return the port where the device is listening for tcp/ip requests
-	 */
-	public int getPort(){
-		return this.port;
+	public void setSrcPort(int srcPort){
+		this.srcPort = srcPort;
 	}
+	
 	
 
 }

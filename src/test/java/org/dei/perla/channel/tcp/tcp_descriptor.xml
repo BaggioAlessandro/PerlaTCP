@@ -27,7 +27,7 @@
 	</messages>
 
 	<channels>
-		<tcp:channel id="tcp_ch_01" ipAddress="127.0.0.1" port="3456"  />
+		<tcp:channel id="tcp_ch_01" srcIpAddress="127.0.0.1" srcPort="1234" destIpAddress="127.0.0.1" destPort="3456"  />
 	</channels>
 	<requests>
 		<tcp:request id="tcp_request"/>

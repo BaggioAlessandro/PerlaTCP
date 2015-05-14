@@ -20,26 +20,30 @@ import org.dei.perla.core.channel.Payload;
 public class TcpChannel extends AbstractAsyncChannel {
 	
 	private Logger logger = Logger.getLogger(TcpChannel.class);
-	private String ipAddress;
-	private int port;
+	private String srcIpAddress;
+	private int srcPort;
+	private String destIpAddress;
+	private int destPort;
 	private SocketChannel socket;
 	
 	private Map<Integer, IOHandler> mapperHandler;
 	private Map<Integer, IORequest> mapperRequest;
 	private int sequence;
 	
-	public TcpChannel(String id, String ipAddress, int port) {
+	public TcpChannel(String id, String srcIpAddress, int srcPort, String destIpAddress, int destPort) {
 		super(id);
-		this.ipAddress = ipAddress;
-		this.port = port;
+		this.srcIpAddress = srcIpAddress;
+		this.srcPort = srcPort;
+		this.destIpAddress = destIpAddress;
+		this.destPort = destPort;
 		this.sequence = 1;
 		this.mapperHandler = new HashMap<Integer, IOHandler>();
 		this.mapperRequest = new HashMap<Integer, IORequest>();
 
 		try {
 			socket = SocketChannel.open();
-			socket.connect(new InetSocketAddress(InetAddress.getByName(this.ipAddress), this.port));
-			System.out.println("Channel connesso con ip " + ipAddress + " e porta " + port);
+			socket.connect(new InetSocketAddress(InetAddress.getByName(this.destIpAddress), this.destPort));
+			System.out.println("Channel connesso con ip " + destIpAddress + " e porta " + destPort);
 			socket.configureBlocking(false);
 		} catch (IOException e) {
 			logger.error("an error has occurred while creating socket connection", e);
@@ -119,13 +123,21 @@ public class TcpChannel extends AbstractAsyncChannel {
 			e.printStackTrace();
 		}
 	}
-	
-	public String getIpAddress() {
-		return ipAddress;
+
+	public String getSrcIpAddress() {
+		return srcIpAddress;
 	}
 
-	public int getPort() {
-		return port;
+	public int getSrcPort() {
+		return srcPort;
+	}
+
+	public String getDestIpAddress() {
+		return destIpAddress;
+	}
+
+	public int getDestPort() {
+		return destPort;
 	}
 
 	private int getRequestId(ByteBuffer buff) {

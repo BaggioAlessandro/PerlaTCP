@@ -40,7 +40,7 @@ public class TcpChannelFactory implements ChannelFactory {
 			throw new InvalidDeviceDescriptorException(message);
 		}
 		tcpDescriptor = (TcpChannelDescriptor) descriptor;
-		TcpChannel channel = new TcpChannel(tcpDescriptor.getId(), tcpDescriptor.getIpAddress(), tcpDescriptor.getPort());
+		TcpChannel channel = new TcpChannel(tcpDescriptor.getId(), tcpDescriptor.getSrcIpAddress(), tcpDescriptor.getSrcPort(), tcpDescriptor.getDestIpAddress(), tcpDescriptor.getDestPort());
 		server.addChannel(channel);
 		return channel;
 	}

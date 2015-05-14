@@ -64,8 +64,8 @@ public class Server {
 	}
 	
 	public void addChannel(TcpChannel channel){
-		int port = channel.getPort();
-		String ipAddress = channel.getIpAddress();
+		int port = channel.getSrcPort();
+		String ipAddress = channel.getSrcIpAddress();
 		InetSocketAddress isAddr = null;
 		try {
 			isAddr = new InetSocketAddress(InetAddress.getByName(ipAddress), port);
