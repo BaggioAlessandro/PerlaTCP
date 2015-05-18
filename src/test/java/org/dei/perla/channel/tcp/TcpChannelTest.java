@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
@@ -16,10 +15,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
 import org.dei.perla.client.Client;
-import org.dei.perla.core.channel.Payload;
 import org.dei.perla.channel.tcp.SynchronizerIOHandler;
-import org.dei.perla.core.channel.http.HttpIORequest;
-import org.dei.perla.core.channel.http.HttpIORequestDescriptor.HttpMethod;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 import org.dei.perla.server.Demux;
@@ -113,33 +109,51 @@ public class TcpChannelTest {
 
 	@Test
 	public void sendPacketToClient() throws RuntimeException, ExecutionException, InterruptedException{
+		int sequence = channel.getSequence();
 		String requestId = "-test-";
 		TcpIORequest request = new TcpIORequest(requestId);
-		//TODO riempi la request con un payload
+		request.setParameter("payload", new StringPayload("request-test"));
 		SynchronizerIOHandler syncHandler = new SynchronizerIOHandler();
 		channel.submit(request, syncHandler);
+		Thread.sleep(1000);
+		int expectedSequence = sequence + 1;
+		assertEquals(expectedSequence, channel.getSequence());
+		assertTrue(channel.getMapperHandler().size() == 1);
+		assertTrue(channel.getMapperRequest().size() == 1);
+		assertEquals(request, channel.getMapperRequest().get(sequence));
+		assertEquals(syncHandler, channel.getMapperHandler().get(sequence));
+		
 		//TODO assert he controlla se il payload mandato è uguale a quello ricevuto
+		byte[] lastReceived = client.getLastReceived();
+		byte[] payload = new byte[lastReceived.length - Integer.BYTES];
+		for(int i = Integer.BYTES; i < lastReceived.length; i++)
+			payload[i-Integer.BYTES] = lastReceived[i];
+		System.out.println(payload.toString());
+		
 		//TODO il clint risponde qualcosa
-		Payload response = syncHandler.getResult().orElseThrow(RuntimeException::new);
+		//Payload response = syncHandler.getResult().orElseThrow(RuntimeException::new);
 		//TODO controlla che le risp coincidano
 	}
+	
 	
 	@Test
 	public void sendPacketToServer() throws InterruptedException{
 		byte[] packet = {0,0,0,0,1,0,0,0,0,1};
 		client.sendPacket(packet);
-		//Thread.sleep(1000);
+		Thread.sleep(1000);
 		byte[] lastReceived = server.getLastReceived();
 		for(int i=0; i < packet.length; i++){
 			assertEquals(packet[i], lastReceived[i]);
 		}
 	}
 	
+	/*
 	@Test
 	public void shutDownTest(){
 		channel.close();
 		assertTrue(channel.isClosed());
 	}
+	*/
 	
 	
 	
