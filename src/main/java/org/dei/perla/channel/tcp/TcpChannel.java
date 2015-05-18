@@ -67,13 +67,11 @@ public class TcpChannel extends AbstractAsyncChannel {
 		tcpRequest = (TcpIORequest) request;
 		
 		byte[] payloadByteArray = tcpRequest.getPayload().asString().getBytes();
-		
 		System.out.println(tcpRequest.getPayload().asString());
 		//ByteBuffer payloadBuffer = tcpRequest.getPayload().asByteBuffer();	//need to return the array because the byteBuffer is read
 																		//only
 		//add as header of the payload the id of the current sequence
 		ByteBuffer bufferToSend = ByteBuffer.allocate(Integer.BYTES + payloadByteArray.length).putInt(sequence);
-		
 		//TODO Verificare che i parametri siano giusti
 		bufferToSend.put(payloadByteArray);
 		//System.out.println(bufferToSend.remaining());
