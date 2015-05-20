@@ -10,7 +10,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
@@ -90,11 +89,14 @@ public class TcpChannelTest {
 		assertEquals(channel.getDestIpAddress(), destIpAddress);
 		assertEquals(channel.getSrcPort(), srcPort);
 		assertEquals(channel.getSrcIpAddress(), srcIpAddress);
+		channel.close();
+		assertTrue(channel.isClosed());
 	}
 	
 	
 	@Test
-	public void lookUpTableTest(){
+	public void lookUpTableTest() throws InvalidDeviceDescriptorException{
+		channel = (TcpChannel) channelFactory.createChannel(descriptor);
 		Demux demux = server.getDemux();
 		demux.getLookupTable();
 		int dimension = 1;
@@ -112,7 +114,8 @@ public class TcpChannelTest {
 	
 
 	@Test
-	public void sendPacketToClient() throws RuntimeException, ExecutionException, InterruptedException{
+	public void sendPacketToClient() throws RuntimeException, ExecutionException, InterruptedException, InvalidDeviceDescriptorException{
+		channel = (TcpChannel) channelFactory.createChannel(descriptor);
 		int sequence = channel.getSequence();
 		String requestId = "-test-";
 		TcpIORequest request = new TcpIORequest(requestId);
@@ -162,7 +165,8 @@ public class TcpChannelTest {
 	
 	
 	@Test
-	public void sendPacketToServer() throws InterruptedException{
+	public void sendPacketToServer() throws InterruptedException, InvalidDeviceDescriptorException{
+		channel = (TcpChannel) channelFactory.createChannel(descriptor);
 		byte[] packet = {0,0,0,0,1,0,0,0,0,1};
 		client.sendPacket(packet);
 		Thread.sleep(1000);
@@ -171,15 +175,6 @@ public class TcpChannelTest {
 			assertEquals(packet[i], lastReceived[i]);
 		}
 	}
-	
-	/*
-	@Test
-	public void shutDownTest(){
-		channel.close();
-		assertTrue(channel.isClosed());
-	}
-	*/
-	
 	
 	
 	static class ServerRunnable implements Runnable{
