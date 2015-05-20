@@ -5,9 +5,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
@@ -123,12 +125,28 @@ public class TcpChannelTest {
 		assertEquals(request, channel.getMapperRequest().get(sequence));
 		assertEquals(syncHandler, channel.getMapperHandler().get(sequence));
 		
-		//TODO assert he controlla se il payload mandato è uguale a quello ricevuto
 		byte[] lastReceived = client.getLastReceived();
+		
+		//verifica che il Payload ricevuto dal client corrisponda a quello inviato
 		byte[] payload = new byte[lastReceived.length - Integer.BYTES];
 		for(int i = Integer.BYTES; i < lastReceived.length; i++)
 			payload[i-Integer.BYTES] = lastReceived[i];
-		System.out.println(payload.toString());
+		String decodedPayload = null;
+		try {
+			decodedPayload = new String(payload, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String expectedPayload = "request-test";
+		assertEquals(expectedPayload.trim(), decodedPayload.trim());
+		
+		//verifica che il numero di sequenza ricevuto dal client corrisponda a quello inviato
+		byte[] sequenceNumberByte = new byte[Integer.BYTES];
+		for(int i = 0; i < Integer.BYTES; i++)
+			sequenceNumberByte[i] = lastReceived[i];
+		ByteBuffer buffer = ByteBuffer.wrap(sequenceNumberByte);
+		int sequenceNumber = buffer.getInt();
+		assertEquals(sequence, sequenceNumber);
 		
 		//TODO il clint risponde qualcosa
 		//Payload response = syncHandler.getResult().orElseThrow(RuntimeException::new);
