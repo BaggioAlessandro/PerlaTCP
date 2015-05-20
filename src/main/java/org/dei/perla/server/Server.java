@@ -125,7 +125,7 @@ public class Server {
 					break;
 				}
 				try {
-					lastReceived = in.array();
+					lastReceived = in.array();// serve per i test
 					demux.demux(in.array(), socketChannel.getRemoteAddress());
 				} catch (IOException e) {
 					e.printStackTrace();
