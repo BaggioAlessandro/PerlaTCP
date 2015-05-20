@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
@@ -18,6 +19,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.dei.perla.client.Client;
 import org.dei.perla.channel.tcp.SynchronizerIOHandler;
+import org.dei.perla.core.channel.Payload;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 import org.dei.perla.server.Demux;
@@ -148,9 +150,14 @@ public class TcpChannelTest {
 		int sequenceNumber = buffer.getInt();
 		assertEquals(sequence, sequenceNumber);
 		
-		//TODO il clint risponde qualcosa
-		//Payload response = syncHandler.getResult().orElseThrow(RuntimeException::new);
-		//TODO controlla che le risp coincidano
+		//verifica che il client risponda correttamente
+		//il client risponde qualcosa (tipo = 0, seqNumb = 1, payload = 65537)
+		byte[] packet = {0,0,0,0,0,0,0,1,0,1,0,1,1};
+		client.sendPacket(packet);
+		Payload response = syncHandler.getResult().orElseThrow(RuntimeException::new);
+		ByteBuffer buff = response.asByteBuffer();
+		int expected = 65537;
+		assertEquals(expected, buff.getInt());
 	}
 	
 	

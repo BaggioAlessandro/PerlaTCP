@@ -88,6 +88,7 @@ public class Client {
 					e.printStackTrace();
 				}
 				lastReceived = in.array();
+				in.clear();
 			}
 		}
 	}
