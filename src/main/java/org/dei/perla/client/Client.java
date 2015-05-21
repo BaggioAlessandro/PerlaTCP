@@ -48,8 +48,8 @@ public class Client {
 	
 	public void sendPacket(byte[] packet){
 		
-		ByteBuffer buffer = ByteBuffer.allocate(48);
-		buffer.clear();
+		int packetLength = packet.length;
+		ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES + packet.length).putInt(packetLength);	
 		buffer.put(packet);
 		
 		buffer.flip();

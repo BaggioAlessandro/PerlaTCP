@@ -21,8 +21,6 @@ import org.dei.perla.channel.tcp.SynchronizerIOHandler;
 import org.dei.perla.core.channel.Payload;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
-import org.dei.perla.server.Demux;
-import org.dei.perla.server.Server;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

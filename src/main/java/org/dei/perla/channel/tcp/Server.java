@@ -1,4 +1,4 @@
-package org.dei.perla.server;
+package org.dei.perla.channel.tcp;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -9,9 +9,6 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Optional;
 
-import org.dei.perla.channel.tcp.TcpChannel;
-import org.dei.perla.channel.tcp.TcpChannelFactory;
-import org.dei.perla.channel.tcp.TcpIORequestBuilderFactory;
 import org.dei.perla.core.channel.IOHandler;
 import org.dei.perla.core.channel.Payload;
 import org.dei.perla.core.utils.Conditions;
@@ -48,6 +45,11 @@ public class Server {
 		return this.requestBuilderFactory;
 	}
 	
+	/**
+	 * Method to set the Handler that is used to handle the DeviceDescriptor 
+	 * @param handler
+	 * @throws IllegalStateException
+	 */
 	public void setFactoryIOHandler(IOHandler handler)
 			throws IllegalStateException {
 		if (this.factoryHandler != null) {
@@ -63,6 +65,12 @@ public class Server {
 		factoryHandler.complete(null, Optional.ofNullable(payload));
 	}
 	
+	/**
+	 * Method invoked by the TcpChannelFactory immediately after creating the channel. This 
+	 * method calls the corresponding method on <class>Demux</class> to add the channel to the lookup table.
+	 * @param channel
+	 * @see org.dei.perla.channel.tcp.TcpChannelFactory
+	 */
 	public void addChannel(TcpChannel channel){
 		int port = channel.getSrcPort();
 		String ipAddress = channel.getSrcIpAddress();
@@ -105,11 +113,12 @@ public class Server {
 	private class Handler extends Thread{
 		
 		private SocketChannel socketChannel;
-		private ByteBuffer in;
+		private ByteBuffer packetLengthBuffer;
+		private ByteBuffer packetBuffer;
 		
 		public Handler(SocketChannel socketChannel){
 			this.socketChannel = socketChannel;
-			in = ByteBuffer.allocate(48);
+			packetLengthBuffer = ByteBuffer.allocate(Integer.BYTES);
 		}
 		
 		@Override
@@ -117,17 +126,23 @@ public class Server {
 			System.out.println("test!!!!!");
 			while(true){
 				try {
-					System.out.println("leggi");
-					socketChannel.read(in);
-				
+					System.out.println("leggi lunghezza pacchetto");
+					socketChannel.read(packetLengthBuffer);
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
 				}
 				try {
-					lastReceived = in.array();// serve per i test
-					demux.demux(in.array(), socketChannel.getRemoteAddress());
-					in.clear();
+					byte[] packetLengthByte = packetLengthBuffer.array();
+					ByteBuffer buffer = ByteBuffer.wrap(packetLengthByte);
+					int packetLength = buffer.getInt();
+					System.out.println("Lunghezza pacchetto = " + packetLength);
+					packetBuffer = ByteBuffer.allocate(packetLength);
+					socketChannel.read(packetBuffer);
+					lastReceived = packetBuffer.array(); //utilizzato solo per i test
+					demux.demux(packetBuffer.array(), socketChannel.getRemoteAddress());
+					packetLengthBuffer.clear();
+					packetBuffer.clear();
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;

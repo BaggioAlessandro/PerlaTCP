@@ -1,23 +1,17 @@
-package org.dei.perla.server;
+package org.dei.perla.channel.tcp;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
-
-
-
-import org.dei.perla.channel.tcp.TcpChannel;
 import org.dei.perla.channel.tcp.TcpIORequest.TypeParameter;
 import org.dei.perla.core.channel.ByteArrayPayload;
+import org.dei.perla.core.channel.ChannelException;
 import org.dei.perla.core.channel.Payload;
 
 public class Demux {
@@ -51,6 +45,7 @@ public class Demux {
 				break;
 
 			case TypeParameter.SHUTDOWN:
+				lookupTable.get(sender).notifyAsyncError(new ChannelException("Closing connection"));
 				break;
 
 			case TypeParameter.DESC:
