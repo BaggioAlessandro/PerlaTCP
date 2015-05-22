@@ -11,7 +11,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.dei.perla.core.channel.http.HttpChannelDescriptor;
 import org.dei.perla.core.descriptor.ChannelDescriptor;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.IORequestDescriptor;

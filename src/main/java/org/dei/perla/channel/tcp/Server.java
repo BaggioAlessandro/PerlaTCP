@@ -73,7 +73,7 @@ public class Server {
 	 */
 	public void addChannel(TcpChannel channel){
 		int port = channel.getSrcPort();
-		String ipAddress = channel.getSrcIpAddress();
+		String ipAddress = channel.getipAddress();
 		InetSocketAddress isAddr = null;
 		try {
 			isAddr = new InetSocketAddress(InetAddress.getByName(ipAddress), port);

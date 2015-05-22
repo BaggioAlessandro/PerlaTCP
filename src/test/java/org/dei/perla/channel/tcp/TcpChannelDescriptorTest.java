@@ -45,11 +45,11 @@ public class TcpChannelDescriptorTest {
 	@Test
 	public void tcpChannelDescriptorFieldsConsistency(){
 		TcpChannelDescriptor channel = (TcpChannelDescriptor) device.getChannelList().get(0);
-		assertTrue(!Check.nullOrEmpty(channel.getDestIpAddress()));
+		assertTrue(!Check.nullOrEmpty(channel.getipAddress()));
 		int port = 3456;
 		String ipAddress = "127.0.0.1";
 		assertEquals(channel.getDestPort(),port);
-		assertTrue(channel.getDestIpAddress().equals(ipAddress));
+		assertTrue(channel.getipAddress().equals(ipAddress));
 	}
 	
 	@Test

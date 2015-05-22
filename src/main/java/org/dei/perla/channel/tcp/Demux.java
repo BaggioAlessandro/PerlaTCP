@@ -45,6 +45,7 @@ public class Demux {
 				break;
 
 			case TypeParameter.SHUTDOWN:
+				lookupTable.get(sender).closeConnection();
 				lookupTable.get(sender).notifyAsyncError(new ChannelException("Closing connection"));
 				break;
 

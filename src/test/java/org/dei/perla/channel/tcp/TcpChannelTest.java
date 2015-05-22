@@ -24,6 +24,7 @@ import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+
 public class TcpChannelTest {
 	
 	private static TcpChannelFactory channelFactory;
@@ -80,13 +81,11 @@ public class TcpChannelTest {
 		assertNotNull(channel);
 		assertFalse(channel.isClosed());
 		int destPort = descriptor.getDestPort();
-		String destIpAddress = descriptor.getDestIpAddress();
+		String ipAddress = descriptor.getipAddress();
 		int srcPort = descriptor.getSrcPort();
-		String srcIpAddress = descriptor.getSrcIpAddress();
 		assertEquals(channel.getDestPort(), destPort);
-		assertEquals(channel.getDestIpAddress(), destIpAddress);
+		assertEquals(channel.getipAddress(), ipAddress);
 		assertEquals(channel.getSrcPort(), srcPort);
-		assertEquals(channel.getSrcIpAddress(), srcIpAddress);
 		channel.close();
 		assertTrue(channel.isClosed());
 	}
@@ -99,7 +98,7 @@ public class TcpChannelTest {
 		demux.getLookupTable();
 		int dimension = 1;
 		assertEquals(demux.getLookupTable().size(), dimension);
-		String ipAddress = channel.getSrcIpAddress();
+		String ipAddress = channel.getipAddress();
 		int port = channel.getSrcPort();
 		InetSocketAddress socketAddress = null;
 		try {

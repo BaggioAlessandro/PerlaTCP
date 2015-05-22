@@ -20,9 +20,8 @@ import org.dei.perla.core.channel.Payload;
 public class TcpChannel extends AbstractAsyncChannel {
 	
 	private Logger logger = Logger.getLogger(TcpChannel.class);
-	private String srcIpAddress;
+	private String ipAddress;
 	private int srcPort;
-	private String destIpAddress;
 	private int destPort;
 	private SocketChannel socket;
 	
@@ -30,11 +29,10 @@ public class TcpChannel extends AbstractAsyncChannel {
 	private Map<Integer, IORequest> mapperRequest;
 	private int sequence;
 	
-	public TcpChannel(String id, String srcIpAddress, int srcPort, String destIpAddress, int destPort) {
+	public TcpChannel(String id, String ipAddress, int srcPort, int destPort) {
 		super(id);
-		this.srcIpAddress = srcIpAddress;
+		this.ipAddress = ipAddress;
 		this.srcPort = srcPort;
-		this.destIpAddress = destIpAddress;
 		this.destPort = destPort;
 		this.sequence = 1;
 		this.mapperHandler = new HashMap<Integer, IOHandler>();
@@ -42,8 +40,8 @@ public class TcpChannel extends AbstractAsyncChannel {
 
 		try {
 			socket = SocketChannel.open();
-			socket.connect(new InetSocketAddress(InetAddress.getByName(this.destIpAddress), this.destPort));
-			System.out.println("Channel connesso con ip " + destIpAddress + " e porta " + destPort);
+			socket.connect(new InetSocketAddress(InetAddress.getByName(this.ipAddress), this.destPort));
+			System.out.println("Channel connesso con ip " + ipAddress + " e porta " + destPort);
 			socket.configureBlocking(false);
 		} catch (IOException e) {
 			logger.error("an error has occurred while creating socket connection", e);
@@ -127,16 +125,12 @@ public class TcpChannel extends AbstractAsyncChannel {
 		}
 	}
 
-	public String getSrcIpAddress() {
-		return srcIpAddress;
+	public String getipAddress() {
+		return ipAddress;
 	}
 
 	public int getSrcPort() {
 		return srcPort;
-	}
-
-	public String getDestIpAddress() {
-		return destIpAddress;
 	}
 
 	public int getDestPort() {
@@ -167,5 +161,18 @@ public class TcpChannel extends AbstractAsyncChannel {
 	
 	protected Map<Integer, IORequest> getMapperRequest(){
 		return this.mapperRequest;
+	}
+	
+	protected SocketChannel getSocket(){
+		return this.socket;
+	}
+
+	public void closeConnection() {
+		try {
+			socket.close();
+			System.out.println("Socket chiuso lato Channel");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
