@@ -41,12 +41,13 @@ public class Demux {
 				if(address != null)
 					lookupTable.get(sender).changeSocket(address);
 				else
-					//TODO lancia eccezzione o altro?
+					//TODO lancia eccezione o altro?
 				break;
 
 			case TypeParameter.SHUTDOWN:
 				lookupTable.get(sender).closeConnection();
 				lookupTable.get(sender).notifyAsyncError(new ChannelException("Closing connection"));
+				lookupTable.remove(sender);
 				break;
 
 			case TypeParameter.DESC:

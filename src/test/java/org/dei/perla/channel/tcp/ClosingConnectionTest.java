@@ -69,6 +69,7 @@ public class ClosingConnectionTest {
 		byte[] packet = {0,0,0,2};
 		client.sendPacket(packet);
 		assertFalse(channel.getSocket().isConnected());
+		assertFalse(server.getDemux().getLookupTable().containsKey(channel));
 	}
 	
 	static class ServerRunnable implements Runnable{
