@@ -16,6 +16,12 @@ import org.dei.perla.core.channel.IOTaskCancelledException;
 import org.dei.perla.core.channel.Payload;
 import org.dei.perla.core.utils.Conditions;
 
+/**
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public abstract class AbstractAsyncChannel implements Channel{
 
 	private final Logger log;

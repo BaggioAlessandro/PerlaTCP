@@ -13,6 +13,16 @@ import org.dei.perla.core.channel.IOHandler;
 import org.dei.perla.core.channel.Payload;
 import org.dei.perla.core.utils.Conditions;
 
+/**
+ * 
+ * A class used to receive messages from devices: it opens a ServerSocketChannel to permits the connection
+ * of multiple devices through SocketChannel. When it receives a message, it passes it to {@code Demux}.
+ * Also, it has the assignment to create {@code TcpChannelFactory} and {@code TcpIORequestBuilderFactory}
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public class Server {
 	
 	private Demux demux;	
@@ -66,10 +76,9 @@ public class Server {
 	}
 	
 	/**
-	 * Method invoked by the TcpChannelFactory immediately after creating the channel. This 
-	 * method calls the corresponding method on <class>Demux</class> to add the channel to the lookup table.
+	 * Method invoked by the {@code TcpChannelFactory} immediately after creating the channel. This 
+	 * method calls the corresponding method on {@code Demux} to add the channel to the lookup table.
 	 * @param channel
-	 * @see org.dei.perla.channel.tcp.TcpChannelFactory
 	 */
 	public void addChannel(TcpChannel channel){
 		int port = channel.getSrcPort();

@@ -14,6 +14,16 @@ import org.dei.perla.core.channel.ByteArrayPayload;
 import org.dei.perla.core.channel.ChannelException;
 import org.dei.perla.core.channel.Payload;
 
+/**
+ * 
+ * Class used to handle the various types of messages received from devices. It mantains a lookup table 
+ * to decide to which {@code TcpChannel} send every message passed by {@code Server}, if it is necessary (for 
+ * instance, messages of type DESC has not to be sent to any Channel)
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public class Demux {
 
 	private Map<SocketAddress, TcpChannel> lookupTable;

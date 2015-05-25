@@ -6,6 +6,12 @@ import org.dei.perla.core.channel.IORequestBuilderFactory;
 import org.dei.perla.core.descriptor.IORequestDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 
+/**
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public class TcpIORequestBuilderFactory implements IORequestBuilderFactory {
 	
 	

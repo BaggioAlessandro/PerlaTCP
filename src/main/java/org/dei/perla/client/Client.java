@@ -6,6 +6,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
+/**
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public class Client {
 	
 	private SocketChannel socket;

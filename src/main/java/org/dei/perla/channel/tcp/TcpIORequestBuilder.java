@@ -5,6 +5,12 @@ import java.util.List;
 import org.dei.perla.core.channel.IORequest;
 import org.dei.perla.core.channel.IORequestBuilder;
 
+/**
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public class TcpIORequestBuilder implements IORequestBuilder {
 	
 	private final String requestId;

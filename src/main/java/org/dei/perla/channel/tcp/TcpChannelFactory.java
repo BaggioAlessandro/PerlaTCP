@@ -6,6 +6,12 @@ import org.dei.perla.core.channel.ChannelFactory;
 import org.dei.perla.core.descriptor.ChannelDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 
+/**
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public class TcpChannelFactory implements ChannelFactory {
 	
 	private Server server;

@@ -3,6 +3,12 @@ package org.dei.perla.channel.tcp;
 import org.dei.perla.core.channel.IORequest;
 import org.dei.perla.core.channel.Payload;
 
+/**
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 public class TcpIORequest implements IORequest {
 	
 	private static final String PAYLOAD = "payload";

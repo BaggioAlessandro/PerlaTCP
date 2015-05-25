@@ -7,6 +7,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.dei.perla.core.descriptor.ChannelDescriptor;
 
+/**
+ * 
+ * @author Luca Baggi (2015)
+ * @author Alessandro Baggio (2015)
+ *
+ */
 @XmlRootElement(name = "channel")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TcpChannelDescriptor extends ChannelDescriptor {
