@@ -9,7 +9,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 /**
- * 
+ * Client used for tests
  * @author Luca Baggi (2015)
  * @author Alessandro Baggio (2015)
  *
@@ -24,13 +24,13 @@ public class Client {
 	public Client(InetSocketAddress address, int port){
 		try {
 			this.address = address;
-			//Creazione del serverSocket per permettere la connessione al socket del Channel e leggere i 
-			//messaggi del Channel
+			//Creation of serverSocket to allow connection to socket inside the Channel and
+			//read the messages from the channel
 			serverSocketChannel = ServerSocketChannel.open();
 			serverSocketChannel.socket().bind(new InetSocketAddress(port));
 			serverSocketChannel.configureBlocking(false);
 			
-			//Apertura del socket per comunicare con il Server
+			//Open the Socket used to communicate with the server
 			socket = SocketChannel.open();
 			socket.connect(address);
 		} catch (IOException e) {

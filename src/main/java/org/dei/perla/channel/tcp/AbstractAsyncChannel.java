@@ -164,8 +164,8 @@ public abstract class AbstractAsyncChannel implements Channel{
 	 *
 	 * @param request
 	 *            {@code IORequest} to be performed.
-	 * @return Response {@code Response} received by the device or by the
-	 *         physical channel
+	 * @param handler
+	 * 			  {@code IOHandler} that has to be notify for the request in input           
 	 * @throws ChannelException
 	 *             if an error occurs while processing the
 	 *             <code>IORequest</code>

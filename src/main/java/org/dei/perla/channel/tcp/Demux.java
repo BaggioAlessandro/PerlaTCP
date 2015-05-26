@@ -76,6 +76,11 @@ public class Demux {
 		lookupTable.put(address, channel);
 	}
 	
+	/**
+	 * Convert the byte array in input in a InetSocketAddress
+	 * @param request, must contain port and the byte representation of ip address
+	 * @return a socket address contained in the byte array in input
+	 */
 	private InetSocketAddress getSocketAddress(byte[] request) {
 		byte[] bytePort = Arrays.copyOfRange(request, 0, Integer.BYTES);
 		ByteBuffer wrapped = ByteBuffer.wrap(bytePort); // big-endian by default
