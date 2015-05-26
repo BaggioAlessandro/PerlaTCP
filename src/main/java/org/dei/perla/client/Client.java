@@ -1,7 +1,9 @@
 package org.dei.perla.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -17,9 +19,11 @@ public class Client {
 	private SocketChannel socket;
 	private ServerSocketChannel serverSocketChannel;
 	private byte[] lastReceived;
+	private InetSocketAddress address;
 
 	public Client(InetSocketAddress address, int port){
 		try {
+			this.address = address;
 			//Creazione del serverSocket per permettere la connessione al socket del Channel e leggere i 
 			//messaggi del Channel
 			serverSocketChannel = ServerSocketChannel.open();
@@ -52,6 +56,17 @@ public class Client {
 		}
 	}
 	
+	public void changeIP(){
+		try {
+			socket.close();
+			socket.connect(address);
+			sendChangeIP(((InetSocketAddress)socket.getLocalAddress()).getHostString(), ((InetSocketAddress)socket.getLocalAddress()).getPort());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 	public void sendPacket(byte[] packet){
 		
 		int packetLength = packet.length;
@@ -70,8 +85,17 @@ public class Client {
 		System.out.println("invio finito");
 	}
 	
-	public void sendChangeIP(String ip, int port){
-		
+	private void sendChangeIP(String strigIP, int port){
+		InetAddress ip = null;
+		try {
+			ip = InetAddress.getByName(strigIP);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		byte[] byteIP = ip.getAddress();
+		ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES + byteIP.length).putInt(port);
+		buffer.put(byteIP);
+		sendPacket(buffer.array());
 	}
 
 	public byte[] getLastReceived(){
