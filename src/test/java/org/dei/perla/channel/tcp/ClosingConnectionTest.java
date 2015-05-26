@@ -70,6 +70,7 @@ public class ClosingConnectionTest {
 		channel = (TcpChannel) channelFactory.createChannel(descriptor);
 		byte[] packet = {0,0,0,2};
 		client.sendPacket(packet);
+		Thread.sleep(200);
 		assertFalse(channel.getSocket().isConnected());
 		assertFalse(server.getDemux().getLookupTable().containsKey(channel));
 	}

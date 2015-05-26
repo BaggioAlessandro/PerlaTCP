@@ -136,7 +136,9 @@ public class Server {
 			while(true){
 				try {
 					System.out.println("leggi lunghezza pacchetto");
-					socketChannel.read(packetLengthBuffer);
+					int num = socketChannel.read(packetLengthBuffer);
+					if(num == -1)
+						break;
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;

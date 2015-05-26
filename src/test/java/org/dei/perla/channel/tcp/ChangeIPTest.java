@@ -69,9 +69,11 @@ public class ChangeIPTest {
 	
 	
 	@Test
-	public void changeIpTest() throws InvalidDeviceDescriptorException, IOException{
+	public void changeIpTest() throws InvalidDeviceDescriptorException, IOException, InterruptedException{
 		channel = (TcpChannel) channelFactory.createChannel(descriptor);
-		//client.changeIP();
+		client.changeIP();
+		Thread.sleep(1000);
+		
 	}
 	
 	

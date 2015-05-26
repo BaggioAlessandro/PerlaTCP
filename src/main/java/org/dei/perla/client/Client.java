@@ -121,13 +121,17 @@ public class Client {
 		@Override
 		public void run(){
 			while(true){
+				int num = 0;
 				try {
-					socketChannel.read(in);
+					num = socketChannel.read(in);
+					if(num == -1)
+						break;
 				
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				lastReceived = in.array();
+				System.out.println("Client riceve pacchetto" + num);
 				in.clear();
 			}
 		}

@@ -127,7 +127,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 		}
 		
 		try {
-			//socket = SocketChannel.open();			
+			socket = SocketChannel.open();			
 			socket.connect(address);
 		} catch (IOException e) {
 			logger.error("an error has occurred while creating new connection during the change of IP", e);
