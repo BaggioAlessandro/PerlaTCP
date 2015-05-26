@@ -116,6 +116,9 @@ public class TcpChannel extends AbstractAsyncChannel {
 	}
 	
 	public synchronized void changeSocket(SocketAddress address){
+		int port = ((InetSocketAddress)address).getPort();
+		this.srcPort = port;
+		
 		try {
 			socket.close();
 		} catch (IOException e) {
@@ -124,7 +127,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 		}
 		
 		try {
-			socket = SocketChannel.open();			
+			//socket = SocketChannel.open();			
 			socket.connect(address);
 		} catch (IOException e) {
 			logger.error("an error has occurred while creating new connection during the change of IP", e);

@@ -36,7 +36,6 @@ public class Demux {
 	}
 	
 	public void demux(byte[] request, SocketAddress sender){
-		
 		int type = getType(request);
 		System.out.println("Il tipo del messaggio è " + type);
 		byte[] bytePayload = removeHeader(request);
@@ -49,6 +48,8 @@ public class Demux {
 			case TypeParameter.CHANGE_IP:
 				InetSocketAddress address = getSocketAddress(bytePayload);
 				if(address != null){
+					System.out.println(address.getHostString());
+					System.out.println(lookupTable.size());
 					TcpChannel channel = lookupTable.get(address);
 					channel.changeSocket(sender);
 					lookupTable.remove(address);

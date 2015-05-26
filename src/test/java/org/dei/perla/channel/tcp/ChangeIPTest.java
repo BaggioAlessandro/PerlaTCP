@@ -1,7 +1,6 @@
 package org.dei.perla.channel.tcp;
 
-import static org.junit.Assert.assertFalse;
-
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
@@ -9,13 +8,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.dei.perla.channel.tcp.ClosingConnectionTest.ClientRunnable;
+import org.dei.perla.channel.tcp.ClosingConnectionTest.ServerRunnable;
 import org.dei.perla.client.Client;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.theories.suppliers.TestedOn;
 
-public class ClosingConnectionTest {
+public class ChangeIPTest {
 	private static TcpChannelFactory channelFactory;
 	private static Server server;
 	private static Client client;
@@ -65,14 +67,13 @@ public class ClosingConnectionTest {
 		clientPort = client.getSendingPort();
 	}
 	
+	
 	@Test
-	public void closingConnectionTest() throws InvalidDeviceDescriptorException, InterruptedException{
+	public void changeIpTest() throws InvalidDeviceDescriptorException, IOException{
 		channel = (TcpChannel) channelFactory.createChannel(descriptor);
-		byte[] packet = {0,0,0,2};
-		client.sendPacket(packet);
-		assertFalse(channel.getSocket().isConnected());
-		assertFalse(server.getDemux().getLookupTable().containsKey(channel));
+		//client.changeIP();
 	}
+	
 	
 	static class ServerRunnable implements Runnable{
 
@@ -91,4 +92,7 @@ public class ClosingConnectionTest {
 		}
 		
 	}
+	
+	
+
 }

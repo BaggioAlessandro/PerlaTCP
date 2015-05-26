@@ -3,6 +3,7 @@ package org.dei.perla.client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
@@ -56,11 +57,15 @@ public class Client {
 		}
 	}
 	
-	public void changeIP(){
+	public void changeIP() throws IOException{
+		String ipAddress = ((InetSocketAddress)socket.getLocalAddress()).getHostString();
+		int port = ((InetSocketAddress)socket.getLocalAddress()).getPort();
 		try {
 			socket.close();
+			socket = SocketChannel.open();
 			socket.connect(address);
-			sendChangeIP(((InetSocketAddress)socket.getLocalAddress()).getHostString(), ((InetSocketAddress)socket.getLocalAddress()).getPort());
+			
+			sendChangeIP(ipAddress,port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
