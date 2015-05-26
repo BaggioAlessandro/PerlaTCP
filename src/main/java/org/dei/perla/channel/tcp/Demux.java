@@ -16,7 +16,7 @@ import org.dei.perla.core.channel.Payload;
 
 /**
  * 
- * Class used to handle the various types of messages received from devices. It mantains a lookup table 
+ * Class used to handle the various types of messages received from devices. It maintains a lookup table 
  * to decide to which {@code TcpChannel} send every message passed by {@code Server}, if it is necessary (for 
  * instance, messages of type DESC has not to be sent to any Channel)
  * 
@@ -35,34 +35,36 @@ public class Demux {
 		this.server = server;
 	}
 	
+	
 	public void demux(byte[] request, SocketAddress sender){
 		int type = getType(request);
-		System.out.println("Il tipo del messaggio è " + type);
 		byte[] bytePayload = removeHeader(request);
 		
 		switch(type){
+			//pass the message to a channel identify by the SocketAddress of the sender
 			case TypeParameter.NORMAL:	
 				lookupTable.get(sender).notifyRequestCompleted(new ByteArrayPayload(bytePayload));
 				break;
-
+				
+			//pass to the channel the ip of the new destination and update the lockup table	
 			case TypeParameter.CHANGE_IP:
 				InetSocketAddress address = getSocketAddress(bytePayload);
 				if(address != null){
-					System.out.println(address.getHostString());
-					System.out.println(lookupTable.size());
 					TcpChannel channel = lookupTable.get(address);
 					channel.changeSocket(sender);
 					lookupTable.remove(address);
 					lookupTable.put(sender, channel);
 				}
 				break;
-
+				
+			//tell the channel to close the connection to the client and remove the channel from the lockup table
 			case TypeParameter.SHUTDOWN:
 				lookupTable.get(sender).closeConnection();
 				lookupTable.get(sender).notifyAsyncError(new ChannelException("Closing connection"));
 				lookupTable.remove(sender);
 				break;
 
+			//notify the descriptor to the server
 			case TypeParameter.DESC:
 				Payload payload = new ByteArrayPayload(bytePayload);
 				server.notifyDescriptor(payload);	
@@ -113,10 +115,8 @@ public class Demux {
 		
 		
 		ByteBuffer wrapped = ByteBuffer.wrap(byteType);
-		//wrapped.order(ByteOrder.LITTLE_ENDIAN);
-		//wrapped.put(byteType); // big-endian by default
+		//big-endian by default
 		int num = wrapped.getInt();
-		System.out.println(num);
 		return num;
 	}
 	

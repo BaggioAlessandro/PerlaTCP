@@ -86,16 +86,11 @@ public class Server {
 		InetSocketAddress isAddr = null;
 		try {
 			isAddr = new InetSocketAddress(InetAddress.getByName(ipAddress), port);
-			System.out.println(isAddr);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		if(isAddr != null)
 			demux.addChannel(isAddr, channel);
-		else {
-			//TODO gestire eccezione
-			System.out.println("Error");
-		}
 	}
 	
 	public Demux getDemux(){
@@ -119,6 +114,13 @@ public class Server {
 		return lastReceived;
 	}
 	
+	/**
+	 * 
+	 * Handler of messages received from the {@code Server} on the open Sockets.
+	 * @author Luca Baggi (2015)
+	 * @author Alessandro Baggio (2015)
+	 *
+	 */
 	private class Handler extends Thread{
 		
 		private SocketChannel socketChannel;
@@ -132,13 +134,12 @@ public class Server {
 		
 		@Override
 		public void run(){
-			System.out.println("test!!!!!");
 			while(true){
 				try {
-					System.out.println("leggi lunghezza pacchetto");
+					//read the message length
 					int num = socketChannel.read(packetLengthBuffer);
 					if(num == -1)
-						break;
+						break;	//when the read return -1 it means that the connection has been closed
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
@@ -147,11 +148,15 @@ public class Server {
 					byte[] packetLengthByte = packetLengthBuffer.array();
 					ByteBuffer buffer = ByteBuffer.wrap(packetLengthByte);
 					int packetLength = buffer.getInt();
-					System.out.println("Lunghezza pacchetto = " + packetLength);
+					
+					//allocate and read the buffer of the length read
 					packetBuffer = ByteBuffer.allocate(packetLength);
 					socketChannel.read(packetBuffer);
-					lastReceived = packetBuffer.array(); //utilizzato solo per i test
+					
+					lastReceived = packetBuffer.array(); //used only for test
+					
 					demux.demux(packetBuffer.array(), socketChannel.getRemoteAddress());
+					
 					packetLengthBuffer.clear();
 					packetBuffer.clear();
 				} catch (IOException e) {
