@@ -3,6 +3,7 @@ package org.dei.perla.channel.tcp;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Arrays;
@@ -114,7 +115,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 		}
 	}
 	
-	public synchronized void changeSocket(InetSocketAddress address){
+	public synchronized void changeSocket(SocketAddress address){
 		try {
 			socket.close();
 		} catch (IOException e) {

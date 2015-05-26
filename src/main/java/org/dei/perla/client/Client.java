@@ -69,6 +69,10 @@ public class Client {
 		}
 		System.out.println("invio finito");
 	}
+	
+	public void sendChangeIP(String ip, int port){
+		
+	}
 
 	public byte[] getLastReceived(){
 		return lastReceived;

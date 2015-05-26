@@ -48,10 +48,12 @@ public class Demux {
 
 			case TypeParameter.CHANGE_IP:
 				InetSocketAddress address = getSocketAddress(bytePayload);
-				if(address != null)
-					lookupTable.get(sender).changeSocket(address);
-				else
-					//TODO lancia eccezione o altro?
+				if(address != null){
+					TcpChannel channel = lookupTable.get(address);
+					channel.changeSocket(sender);
+					lookupTable.remove(address);
+					lookupTable.put(sender, channel);
+				}
 				break;
 
 			case TypeParameter.SHUTDOWN:
