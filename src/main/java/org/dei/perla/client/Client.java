@@ -93,7 +93,8 @@ public class Client {
 			e.printStackTrace();
 		}
 		byte[] byteIP = ip.getAddress();
-		ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES + byteIP.length).putInt(port);
+		ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES * 2 + byteIP.length).putInt(1);
+		buffer.putInt(port);
 		buffer.put(byteIP);
 		sendPacket(buffer.array());
 	}
