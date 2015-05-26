@@ -48,7 +48,6 @@ public class TcpChannel extends AbstractAsyncChannel {
 		try {
 			socket = SocketChannel.open();
 			socket.connect(new InetSocketAddress(InetAddress.getByName(this.ipAddress), this.destPort));
-			System.out.println("Channel connesso con ip " + ipAddress + " e porta " + destPort);
 			socket.configureBlocking(false);
 		} catch (IOException e) {
 			logger.error("an error has occurred while creating socket connection", e);
@@ -72,7 +71,6 @@ public class TcpChannel extends AbstractAsyncChannel {
 		tcpRequest = (TcpIORequest) request;
 		
 		byte[] payloadByteArray = tcpRequest.getPayload().asString().getBytes();
-		System.out.println(tcpRequest.getPayload().asString());
 		
 		int packetLength = Integer.BYTES + payloadByteArray.length;
 		
@@ -97,15 +95,18 @@ public class TcpChannel extends AbstractAsyncChannel {
 		return;
 	}
 	
+	/**
+	 * Notify to an handler the received payload. Refer to the TCP report to
+	 * undertand to what handler the payload is notify.
+	 * @param payload
+	 */
 	public synchronized void notifyRequestCompleted(Payload payload){
 		ByteBuffer buff = payload.asByteBuffer();
 		byte[] byteID = new byte[buff.capacity()];
 		buff.get(byteID, 0, byteID.length);
 		ByteBuffer wrapped = ByteBuffer.wrap(byteID); // big-endian by default
 		int requestId = getRequestId(wrapped);
-		
-		System.out.println("richiesta numero " + requestId);
-		
+				
 		byte[] effectiveByteArray = removeHeader(wrapped.array());
 		
 		ByteArrayPayload effectivePayload = new ByteArrayPayload(effectiveByteArray);
@@ -185,7 +186,6 @@ public class TcpChannel extends AbstractAsyncChannel {
 	public void closeConnection() {
 		try {
 			socket.close();
-			System.out.println("Socket chiuso lato Channel");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
