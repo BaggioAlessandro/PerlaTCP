@@ -1,5 +1,9 @@
 package org.dei.perla.channel.tcp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -8,14 +12,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.dei.perla.channel.tcp.ClosingConnectionTest.ClientRunnable;
-import org.dei.perla.channel.tcp.ClosingConnectionTest.ServerRunnable;
 import org.dei.perla.client.Client;
 import org.dei.perla.core.descriptor.DeviceDescriptor;
 import org.dei.perla.core.descriptor.InvalidDeviceDescriptorException;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 public class ChangeIPTest {
 	private static TcpChannelFactory channelFactory;
@@ -71,9 +72,19 @@ public class ChangeIPTest {
 	@Test
 	public void changeIpTest() throws InvalidDeviceDescriptorException, IOException, InterruptedException{
 		channel = (TcpChannel) channelFactory.createChannel(descriptor);
+		InetSocketAddress oldAddress = new InetSocketAddress(InetAddress.getByName(channel.getipAddress()), 
+				channel.getSrcPort());
+		channel.setIpAddress("oldIpAddress"); //wrong string to test the right update of IpAddress after changeIp
 		client.changeIP();
 		Thread.sleep(1000);
-		
+		int expectedPort = client.getSendingPort();
+		String expectedIp = "127.0.0.1";
+		assertEquals(expectedPort, channel.getSrcPort());
+		assertEquals(expectedIp, channel.getipAddress());
+		InetSocketAddress newAddress = new InetSocketAddress(InetAddress.getByName(channel.getipAddress()), 
+				channel.getSrcPort());
+		assertFalse(server.getDemux().getLookupTable().containsKey(oldAddress));
+		assertTrue(server.getDemux().getLookupTable().containsKey(newAddress));
 	}
 	
 	

@@ -3,7 +3,6 @@ package org.dei.perla.client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
@@ -90,7 +89,7 @@ public class Client {
 		System.out.println("invio finito");
 	}
 	
-	private void sendChangeIP(String strigIP, int port){
+	public void sendChangeIP(String strigIP, int port){
 		InetAddress ip = null;
 		try {
 			ip = InetAddress.getByName(strigIP);
@@ -111,11 +110,12 @@ public class Client {
 	private class Handler extends Thread{
 		
 		private SocketChannel socketChannel;
-		private ByteBuffer in;
+		private ByteBuffer packetLengthBuffer;
+		private ByteBuffer packetBuffer;
 		
 		public Handler(SocketChannel socketChannel){
+			packetLengthBuffer = ByteBuffer.allocate(Integer.BYTES);
 			this.socketChannel = socketChannel;
-			in = ByteBuffer.allocate(48);
 		}
 		
 		@Override
@@ -123,16 +123,26 @@ public class Client {
 			while(true){
 				int num = 0;
 				try {
-					num = socketChannel.read(in);
+					num = socketChannel.read(packetLengthBuffer);
 					if(num == -1)
 						break;
 				
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				lastReceived = in.array();
-				System.out.println("Client riceve pacchetto" + num);
-				in.clear();
+				byte[] packetLengthByte = packetLengthBuffer.array();
+				ByteBuffer buffer = ByteBuffer.wrap(packetLengthByte);
+				int packetLength = buffer.getInt();
+				packetBuffer = ByteBuffer.allocate(packetLength);
+				try {
+					socketChannel.read(packetBuffer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				lastReceived = packetBuffer.array(); //used for test
+				System.out.println("Client riceve pacchetto " + num);
+				packetLengthBuffer.clear();
+				packetBuffer.clear();
 			}
 		}
 	}

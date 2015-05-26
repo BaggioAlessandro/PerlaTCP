@@ -74,8 +74,11 @@ public class TcpChannel extends AbstractAsyncChannel {
 		byte[] payloadByteArray = tcpRequest.getPayload().asString().getBytes();
 		System.out.println(tcpRequest.getPayload().asString());
 		
+		int packetLength = Integer.BYTES + payloadByteArray.length;
+		
 		//add as header of the payload the id of the current sequence
-		ByteBuffer bufferToSend = ByteBuffer.allocate(Integer.BYTES + payloadByteArray.length).putInt(sequence);
+		ByteBuffer bufferToSend = ByteBuffer.allocate(Integer.BYTES * 2 + payloadByteArray.length).putInt(packetLength);
+		bufferToSend.putInt(sequence);
 		bufferToSend.put(payloadByteArray);
 		
 		bufferToSend.flip();
@@ -119,6 +122,8 @@ public class TcpChannel extends AbstractAsyncChannel {
 		int port = ((InetSocketAddress)address).getPort();
 		this.srcPort = port;
 		
+		this.ipAddress = ((InetSocketAddress)address).getHostString();
+		
 		try {
 			socket.close();
 		} catch (IOException e) {
@@ -128,7 +133,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 		
 		try {
 			socket = SocketChannel.open();			
-			socket.connect(address);
+			socket.connect(new InetSocketAddress(InetAddress.getByName(this.ipAddress), this.destPort));
 		} catch (IOException e) {
 			logger.error("an error has occurred while creating new connection during the change of IP", e);
 			e.printStackTrace();
@@ -184,5 +189,9 @@ public class TcpChannel extends AbstractAsyncChannel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void setIpAddress(String ip){
+		this.ipAddress = ip;
 	}
 }
