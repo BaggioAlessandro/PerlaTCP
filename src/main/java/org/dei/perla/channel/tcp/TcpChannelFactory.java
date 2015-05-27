@@ -46,6 +46,8 @@ public class TcpChannelFactory implements ChannelFactory {
 		}
 		tcpDescriptor = (TcpChannelDescriptor) descriptor;
 		TcpChannel channel = new TcpChannel(tcpDescriptor.getId(), tcpDescriptor.getipAddress(), tcpDescriptor.getSrcPort(), tcpDescriptor.getDestPort());
+		//after creation of the Channel, notifies the Server so that it can add it a corresponding entry 
+		//in the lookup table
 		server.addChannel(channel);
 		return channel;
 	}

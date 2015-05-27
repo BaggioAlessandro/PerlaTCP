@@ -41,12 +41,12 @@ public class Demux {
 		byte[] bytePayload = removeHeader(request);
 		
 		switch(type){
-			//pass the message to a channel identify by the SocketAddress of the sender
+			//pass the message to a channel identified by the SocketAddress of the sender
 			case TypeParameter.NORMAL:	
 				lookupTable.get(sender).notifyRequestCompleted(new ByteArrayPayload(bytePayload));
 				break;
 				
-			//pass to the channel the ip of the new destination and update the lockup table	
+			//pass to the channel the ip of the new destination and update the lookup table	
 			case TypeParameter.CHANGE_IP:
 				InetSocketAddress address = getSocketAddress(bytePayload);
 				if(address != null){
@@ -57,7 +57,7 @@ public class Demux {
 				}
 				break;
 				
-			//tell the channel to close the connection to the client and remove the channel from the lockup table
+			//tell the channel to close the connection to the client and remove the channel from the lookup table
 			case TypeParameter.SHUTDOWN:
 				lookupTable.get(sender).closeConnection();
 				lookupTable.get(sender).notifyAsyncError(new ChannelException("Closing connection"));

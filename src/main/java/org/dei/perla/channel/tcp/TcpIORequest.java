@@ -47,6 +47,14 @@ public class TcpIORequest implements IORequest {
 		return this.payload;
 	}
 	
+	/**
+	 * 
+	 * Class used to identify various types of message sent by a device
+	 * 
+	 * @author Luca Baggi (2015)
+	 * @author Luca Baggi (2015)
+	 *
+	 */
 	public class TypeParameter{
 
 		public static final int NORMAL = 0;
@@ -57,24 +65,4 @@ public class TcpIORequest implements IORequest {
 		public static final int TYPE_LENGHT = Integer.BYTES;
 	}
 	
-	/*
-	public enum TypeParameter{
-		NORMAL(0),
-		CHANGE_IP(1),
-		SHUTDOWN(2),
-		DESC(3);
-		
-		private final int type;
-		public static final int TYPE_LENGHT = 4;
-		
-		private TypeParameter(int type) {	
-			this.type = type;
-		}
-
-		public int getType(){
-			return type;
-		}
-
-	}
-	*/
 }

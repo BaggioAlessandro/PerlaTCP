@@ -97,7 +97,7 @@ public class TcpChannel extends AbstractAsyncChannel {
 	
 	/**
 	 * Notify to an handler the received payload. Refer to the TCP report to
-	 * undertand to what handler the payload is notify.
+	 * undertand to what handler the payload is notified.
 	 * @param payload
 	 */
 	public synchronized void notifyRequestCompleted(Payload payload){
@@ -119,6 +119,12 @@ public class TcpChannel extends AbstractAsyncChannel {
 		}
 	}
 	
+	/**
+	 * When a changeIp message is sent by the device, this method is invoked. It updates src port and ipAddress
+	 * and opens a new Socket coherently with the new address of the device. Notice that the port where the 
+	 * device is listening does not change
+	 * @param address, it is the new address (ip and port where it writes) of the device
+	 */
 	public synchronized void changeSocket(SocketAddress address){
 		int port = ((InetSocketAddress)address).getPort();
 		this.srcPort = port;
